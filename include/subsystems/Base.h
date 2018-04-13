@@ -4,14 +4,11 @@
 class Base {
   private:
     int encoderTicks;
-  public:
+    static Base* instance;
     Base();
-    /**
-     * Move the base
-     * @param left - speed of the left side
-     * @param right - speed of the right side
-     */
+  public:
     void moveBase(int left, int right);
+    static Base* getInstance();
 };
 
 #endif

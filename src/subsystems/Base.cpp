@@ -1,5 +1,7 @@
 #include "main.h"
 
+Base* Base::instance = 0;
+
 Base::Base() {
   encoderTicks = 20;
 }
@@ -11,7 +13,7 @@ Base::Base() {
  */
 void Base::moveBase(int left, int right) {
   left = threshold(left);
-  right = threshold(right);
+  right = -threshold(right);
 
   //Left motors
   motorSet(leftFrontBase, left);
@@ -22,4 +24,12 @@ void Base::moveBase(int left, int right) {
   motorSet(rightFrontBase, right);
   motorSet(rightMiddleBase, right);
   motorSet(rightRearBase, right);
+}
+
+Base* Base::getInstance() {
+    if (instance == 0) {
+      instance = new Base();
+    }
+
+    return instance;
 }

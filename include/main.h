@@ -29,6 +29,8 @@
 #include <Constants.h>
 #include <common.h>
 #include <subsystems/Base.h>
+#include <subsystems/Arm.h>
+#include <subsystems/MobileGoal.h>
 
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus

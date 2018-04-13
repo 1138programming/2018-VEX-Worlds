@@ -30,14 +30,47 @@
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
-	int leftSide;
-	int rightSide;
-	Base* base = new Base();
+	//Define joystick input variables
+	int leftSide, rightSide, wrist; // Joysticks
+	bool fourBarUp, fourBarDown, moGoalFwd, moGoalBck; // Buttons
+
+	//Create instances of subsystems
+	Base* base = Base::getInstance();
+	Arm* arm = Arm::getInstance();
+	MobileGoal* moGoal = MobileGoal::getInstance();
+
 	while (true) {
-		//Joystick control
-		leftSide = joystickGetAnalog(1, 3); // Joystick 1, channel 3 (left y-channel)
-		rightSide = joystickGetAnalog(1, 2); // Joystick 1, channel 2 (right y-channel)
-		base->moveBase(leftSide, rightSide); // Moves the base
+		// Set joysticks
+		leftSide = joystickGetAnalog(1, 3); // Left y-channel
+		rightSide = joystickGetAnalog(1, 2); // Right y-channel
+		wrist = joystickGetAnalog(2, 2); // Right y-channel
+
+		// Set buttons
+		fourBarUp = joystickGetDigital(2, 5, JOY_UP);
+		fourBarDown = joystickGetDigital(2, 5, JOY_DOWN);
+		moGoalFwd = joystickGetDigital(1, 5, JOY_UP);
+		moGoalBck = joystickGetDigital(1, 5, JOY_DOWN);
+
+		// Move base
+		base->moveBase(leftSide, rightSide);
+
+		// Move four bar
+		if(fourBarUp && !fourBarDown) {
+			arm->moveFourBar(KMaxMotorSpeed);
+		} else if(fourBarDown && !fourBarUp) {
+			arm->moveFourBar(-KMaxMotorSpeed);
+		} else {
+			arm->moveFourBar(0);
+		}
+
+		// Move mobile goal
+		if(moGoalFwd && !moGoalBck) {
+			moGoal->moveMobileGoal(KMaxMotorSpeed);
+		} else if(moGoalBck && !moGoalFwd) {
+			moGoal->moveMobileGoal(-KMaxMotorSpeed);
+		} else {
+			moGoal->moveMobileGoal(0);
+		}
 
 		delay(10); // Small delay
 	}
