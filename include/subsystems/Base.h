@@ -3,7 +3,6 @@
 
 class Base {
   private:
-    int encoderTicks;
     static Base* instance;
     Base();
   public:

@@ -3,7 +3,6 @@
 Base* Base::instance = 0;
 
 Base::Base() {
-  encoderTicks = 20;
 }
 
 /**

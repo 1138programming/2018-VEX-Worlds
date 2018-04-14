@@ -33,19 +33,22 @@ const int wrist = 2;
 const int fourBar = 7;
 
 
-//Other constants
+//Motor and encoder constants
 const int KMaxMotorSpeed = 127;
+const int encoderTicks = 90; // Encoder ticks in one revolution
+const int fourBarEncoderTicks = 450; // Accounts for the 5:1 gear ratio
 
 
 // Analog Sensors
 //const int autonPotentiometer = 1;
-const int gyroSensor = 2;
+//const int gyroSensor = 2;
 
 
 // Digital Sensors
 //const int clawPneumatic = 1;
-const int fourBarLimitSwitch = 6;
-
+const int fourBarLimitSwitch = 5;
+const int fourBarEncoderTopPort = 6;
+const int fourBarEncoderBottomPort = 7;
 
 // Other Sensors
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct

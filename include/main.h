@@ -28,8 +28,12 @@
 #include <API.h>
 #include <Constants.h>
 #include <common.h>
+#include <PIDController.h>
 #include <subsystems/Base.h>
 #include <subsystems/Arm.h>
+#include <subsystems/armSubmodules/FourBar.h>
+#include <subsystems/armSubmodules/Wrist.h>
+//#include <subsystems/Wrist.h>
 #include <subsystems/MobileGoal.h>
 
 // Allow usage of this file in C++ programs

@@ -8,3 +8,11 @@ int threshold(int aNumber, int threshold) {
 bool getLimitSwitch(unsigned char pin) {
 	return digitalRead(pin) == LOW;
 }
+
+int range(int value, int min, int max) {
+	if (value < min)
+		return min;
+	else if (value > max)
+		return max;
+	return value;
+}

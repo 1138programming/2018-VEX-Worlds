@@ -2,6 +2,9 @@
 
 MobileGoal* MobileGoal::instance = 0;
 
+MobileGoal::MobileGoal() {
+}
+
 void MobileGoal::moveMobileGoal(int speed) {
   speed = threshold(speed);
   motorSet(leftMobileGoal, speed);

@@ -38,7 +38,9 @@ void operatorControl() {
 	Base* base = Base::getInstance();
 	Arm* arm = Arm::getInstance();
 	MobileGoal* moGoal = MobileGoal::getInstance();
+	//Wrist* wristSys = new Wrist();
 
+	int pidSetpoint;
 	while (true) {
 		// Set joysticks
 		leftSide = joystickGetAnalog(1, 3); // Left y-channel
@@ -54,19 +56,24 @@ void operatorControl() {
 		// Move base
 		base->moveBase(leftSide, rightSide);
 
+		// Move wrist
+		arm->moveWrist(wrist);
+
 		// Move four bar
-		if(fourBarUp && !fourBarDown) {
-			arm->moveFourBar(KMaxMotorSpeed);
-		} else if(fourBarDown && !fourBarUp) {
-			arm->moveFourBar(-KMaxMotorSpeed);
+		pidSetpoint = arm->getFourBarSetpoint();
+		if(fourBarUp) {
+			arm->setFourBarSetpoint(pidSetpoint + encoderTicks / 100);
+		} else if(fourBarDown) {
+			arm->setFourBarSetpoint(pidSetpoint - encoderTicks / 100);
 		} else {
-			arm->moveFourBar(0);
+			arm->setFourBarSetpoint(pidSetpoint);
 		}
+		arm->fourBarLoop();
 
 		// Move mobile goal
-		if(moGoalFwd && !moGoalBck) {
+		if(moGoalFwd) {
 			moGoal->moveMobileGoal(KMaxMotorSpeed);
-		} else if(moGoalBck && !moGoalFwd) {
+		} else if(moGoalBck) {
 			moGoal->moveMobileGoal(-KMaxMotorSpeed);
 		} else {
 			moGoal->moveMobileGoal(0);
