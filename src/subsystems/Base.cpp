@@ -3,6 +3,7 @@
 Base* Base::instance = 0;
 
 Base::Base() {
+  gyro = gyroInit(gyroPort, 196);
 }
 
 /**

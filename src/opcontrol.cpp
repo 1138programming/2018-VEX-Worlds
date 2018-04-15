@@ -31,8 +31,8 @@
  */
 void operatorControl() {
 	//Define joystick input variables
-	int leftSide, rightSide, wrist; // Joysticks
-	bool fourBarUp, fourBarDown, moGoalFwd, moGoalBck; // Buttons
+	int leftSide, rightSide, wristChannel, fourBarChannel; // Joysticks channel values
+	bool moGoalFwd, moGoalBck; // Button states
 
 	//Create instances of subsystems
 	Base* base = Base::getInstance();
@@ -45,29 +45,22 @@ void operatorControl() {
 		// Set joysticks
 		leftSide = joystickGetAnalog(1, 3); // Left y-channel
 		rightSide = joystickGetAnalog(1, 2); // Right y-channel
-		wrist = joystickGetAnalog(2, 2); // Right y-channel
+		wristChannel = joystickGetAnalog(2, 3); // Left y-channel
+		fourBarChannel = joystickGetAnalog(2, 2); // Right y-channel
 
 		// Set buttons
-		fourBarUp = joystickGetDigital(2, 5, JOY_UP);
-		fourBarDown = joystickGetDigital(2, 5, JOY_DOWN);
-		moGoalFwd = joystickGetDigital(1, 5, JOY_UP);
-		moGoalBck = joystickGetDigital(1, 5, JOY_DOWN);
+		moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
+		moGoalBck = joystickGetDigital(1, 6, JOY_UP);
 
 		// Move base
 		base->moveBase(leftSide, rightSide);
 
 		// Move wrist
-		arm->moveWrist(wrist);
+		arm->moveWrist(wristChannel);
 
 		// Move four bar
-		pidSetpoint = arm->getFourBarSetpoint();
-		if(fourBarUp) {
-			arm->setFourBarSetpoint(pidSetpoint + encoderTicks / 100);
-		} else if(fourBarDown) {
-			arm->setFourBarSetpoint(pidSetpoint - encoderTicks / 100);
-		} else {
-			arm->setFourBarSetpoint(pidSetpoint);
-		}
+		pidSetpoint = arm->getFourBarSetpoint() + ((encoderTicks / 100) * (fourBarChannel / KMaxJoystickValue));
+		arm->setFourBarSetpoint(pidSetpoint);
 		arm->fourBarLoop();
 
 		// Move mobile goal

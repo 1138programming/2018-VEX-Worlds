@@ -5,8 +5,8 @@ ROOT=.
 # Binary output directory
 BINDIR=$(ROOT)/bin
 # Subdirectories to include in the build
-SUBDIRS=src src/subsystems
-SUBDIRS=src src/subsystems/armSubmodules
+
+SUBDIRS=src src/subsystems src/subsystems/armSubmodules
 
 # Nothing below here needs to be modified by typical users
 

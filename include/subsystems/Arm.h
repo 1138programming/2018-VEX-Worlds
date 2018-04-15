@@ -1,10 +1,9 @@
-//#include "main.h"
-#include "armSubmodules/FourBar.h"
-#include "armSubmodules/Wrist.h"
-//#include "Wrist.h"
-
 #ifndef ARM_H
 #define ARM_H
+
+#include "main.h"
+#include "armSubmodules/FourBar.h"
+#include "armSubmodules/Wrist.h"
 
 class Arm {
   private:
@@ -13,11 +12,14 @@ class Arm {
     FourBar* fourBarSys;
     Arm();
   public:
-    void moveWrist(int speed);
     void moveFourBar(int speed);
+    void moveWrist(int speed);
     void setFourBarSetpoint(int setpoint);
+    void setWristSetpoint(int setpoint);
     int getFourBarSetpoint();
+    int getWristSetpoint();
     void fourBarLoop();
+    void wristLoop();
     static Arm* getInstance();
 };
 
