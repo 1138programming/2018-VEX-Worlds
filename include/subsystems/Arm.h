@@ -4,12 +4,14 @@
 #include "main.h"
 #include "subsystems/armSubmodules/FourBar.h"
 #include "subsystems/armSubmodules/Wrist.h"
+#include "subsystems/armSubmodules/Collector.h"
 
 class Arm {
   private:
     static Arm* instance;
-    Wrist* wristSys;
-    FourBar* fourBarSys;
+    Wrist* wrist;
+    FourBar* fourBar;
+    Collector* collector;
     TaskHandle task;
     static Semaphore semaphore;
     static void stackConeTask(void * parameter);
@@ -17,6 +19,7 @@ class Arm {
   public:
     void moveFourBar(int speed);
     void moveWrist(int speed);
+    void moveCollector(int speed);
     void setFourBarSetpoint(int setpoint);
     void setWristSetpoint(int setpoint);
     int getFourBarSetpoint();

@@ -28,9 +28,10 @@ const int rightRearBase = 10;
 const int leftMobileGoal = 5;
 const int rightMobileGoal = 3;
 
-// Wrist and arm motors
-const int wrist = 2;
-const int fourBar = 7;
+// Arm submodule motors
+const int wristPort = 2;
+const int fourBarPort = 7;
+const int collectorPort = 11;
 
 
 // IME Addresses

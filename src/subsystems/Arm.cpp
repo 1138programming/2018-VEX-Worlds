@@ -4,48 +4,53 @@ Arm* Arm::instance = 0;
 Semaphore Arm::semaphore = 0;
 
 Arm::Arm() {
-   wristSys = Wrist::getInstance();
-   fourBarSys = FourBar::getInstance();
+   wrist = Wrist::getInstance();
+   fourBar = FourBar::getInstance();
+   collector = Collector::getInstance();
    task = NULL;
 }
 
 void Arm::moveFourBar(int speed) {
-  fourBarSys->move(speed);
+  fourBar->move(speed);
 }
 
 void Arm::moveWrist(int speed) {
-  wristSys->move(speed);
+  wrist->move(speed);
+}
+
+void Arm::moveCollector(int speed) {
+  collector->move(speed);
 }
 
 void Arm::setFourBarSetpoint(int setpoint) {
-  fourBarSys->setSetpoint(setpoint);
+  fourBar->setSetpoint(setpoint);
 }
 
 void Arm::setWristSetpoint(int setpoint) {
-  wristSys->setSetpoint(setpoint);
+  wrist->setSetpoint(setpoint);
 }
 
 int Arm::getFourBarSetpoint() {
-  return fourBarSys->getSetpoint();
+  return fourBar->getSetpoint();
 }
 
 int Arm::getWristSetpoint() {
-  return wristSys->getSetpoint();
+  return wrist->getSetpoint();
 }
 
 void Arm::fourBarLoop() {
-  fourBarSys->loop();
+  fourBar->loop();
 }
 
 void Arm::wristLoop() {
-  wristSys->loop();
+  wrist->loop();
 }
 bool Arm::fourBarAtSetpoint() {
-  return fourBarSys->atSetpoint();
+  return fourBar->atSetpoint();
 }
 
 bool Arm::wristAtSetpoint() {
-  return wristSys->atSetpoint();
+  return wrist->atSetpoint();
 }
 
 bool Arm::startStackingCone() {

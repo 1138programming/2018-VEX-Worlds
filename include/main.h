@@ -33,6 +33,7 @@
 #include <subsystems/Arm.h>
 #include <subsystems/armSubmodules/FourBar.h>
 #include <subsystems/armSubmodules/Wrist.h>
+#include <subsystems/armSubmodules/Collector.h>
 //#include <subsystems/Wrist.h>
 #include <subsystems/MobileGoal.h>
 
