@@ -14,6 +14,7 @@ class Wrist {
     void setSetpoint(int setpoint);
     int getSetpoint();
     void loop();
+    bool atSetpoint();
     int getEncoderValue();
     static Wrist* getInstance();
 };

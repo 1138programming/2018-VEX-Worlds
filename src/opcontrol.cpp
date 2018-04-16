@@ -32,13 +32,13 @@
 void operatorControl() {
 	//Define joystick input variables
 	int leftSide, rightSide, wristChannel, fourBarChannel; // Joysticks channel values
-	bool moGoalFwd, moGoalBck; // Button states
+	bool moGoalFwd, moGoalBck, stackCone; // Button states
+	bool stackingCone = false;
 
 	//Create instances of subsystems
 	Base* base = Base::getInstance();
 	Arm* arm = Arm::getInstance();
 	MobileGoal* moGoal = MobileGoal::getInstance();
-	//Wrist* wristSys = new Wrist();
 
 	int pidSetpoint;
 	while (true) {
@@ -51,17 +51,22 @@ void operatorControl() {
 		// Set buttons
 		moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
 		moGoalBck = joystickGetDigital(1, 6, JOY_UP);
+		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
 
 		// Move base
 		base->moveBase(leftSide, rightSide);
 
-		// Move wrist
-		arm->moveWrist(wristChannel);
+		if(!stackingCone) {
+			// Move wrist
+			pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
+			arm->setWristSetpoint(pidSetpoint);
+			arm->wristLoop();
 
-		// Move four bar
-		pidSetpoint = arm->getFourBarSetpoint() + ((encoderTicks / 100) * (fourBarChannel / KMaxJoystickValue));
-		arm->setFourBarSetpoint(pidSetpoint);
-		arm->fourBarLoop();
+			// Move four bar
+			pidSetpoint = arm->getFourBarSetpoint() + ((encoderTicks / 100) * (fourBarChannel / KMaxJoystickValue));
+			arm->setFourBarSetpoint(pidSetpoint);
+			arm->fourBarLoop();
+		}
 
 		// Move mobile goal
 		if(moGoalFwd) {
@@ -72,6 +77,11 @@ void operatorControl() {
 			moGoal->moveMobileGoal(0);
 		}
 
-		delay(10); // Small delay
+		// Start stacking a cone (stop if a cone is already being stacked)
+		if(stackCone) {
+			stackingCone = arm->startStackingCone();
+		}
+
+		delay(delayTime); // Small delay
 	}
 }

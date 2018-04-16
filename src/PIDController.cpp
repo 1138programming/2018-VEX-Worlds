@@ -2,7 +2,7 @@
 
 PIDController::PIDController(int motorChannel, float kP, float kI, float kD) {
   this->motorChannel = motorChannel;
-  this->kP = kP;
+  this->kP = 0;
   this->kI = kI;
   this->kD = kD;
   //this->controllers.push_back(this);
@@ -33,14 +33,25 @@ void PIDController::sensorValue(int value) {
   this->currSensorValue = value;
 }
 
+void PIDController::setThreshold(int threshold) {
+  this->threshold = threshold;
+}
+
 void PIDController::loop() {
-    deltaTime = millis() - lastTime;
-    lastTime = millis();
-    int error, derivative, output;
-    error = setpoint - currSensorValue;
-    integral += error * (deltaTime / 1000);
-    derivative  = (error - previousError) / (deltaTime / 1000);
-    output = range(kP * error + kI * integral + kD * derivative);
-    motorSet(motorChannel, output);
-    previousError = error;
+  deltaTime = millis() - lastTime;
+  lastTime = millis();
+  int error, output;
+  error = setpoint - currSensorValue;
+  integral += error * (deltaTime / 1000);
+  derivative  = (error - previousError) / (deltaTime / 1000);
+  output = range(kP * error + kI * integral + kD * derivative);
+  motorSet(motorChannel, output);
+  previousError = error;
+}
+
+bool PIDController::atSetpoint() {
+  if (range(currSensorValue, setpoint - threshold, setpoint + threshold) && fabs(derivative) < 0.5) {
+      return true;
+  }
+  return false;
 }

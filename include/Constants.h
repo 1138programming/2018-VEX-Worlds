@@ -33,6 +33,12 @@ const int wrist = 2;
 const int fourBar = 7;
 
 
+// IME Addresses
+const unsigned char mobileGoalI2CAddress = 0;
+const unsigned char baseLeftI2CAddress = 1;
+const unsigned char baseRightI2CAddress = 2;
+
+
 //Motor and encoder constants
 const int KMaxMotorSpeed = 127;
 const int KMaxJoystickValue = 127;
@@ -47,13 +53,17 @@ const int gyroPort = 1;
 
 // Digital Sensors
 //const int clawPneumatic = 1;
-const int fourBarLimitSwitch = 5;
+const int fourBarLimitSwitch = 1;
+const int ultrasonicPing = 4;
+const int ultrasonicEcho = 5;
 const int fourBarEncoderTopPort = 6;
 const int fourBarEncoderBottomPort = 7;
 const int wristEncoderTopPort = 8;
 const int wristEncoderBottomPort = 9;
 
+
 // Other constants
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct
+const long unsigned int delayTime = 10;
 
 #endif

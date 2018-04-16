@@ -11,6 +11,16 @@ void MobileGoal::moveMobileGoal(int speed) {
   motorSet(rightMobileGoal, speed);
 }
 
+void resetIME() {
+  imeReset(mobileGoalI2CAddress);
+}
+
+int MobileGoal::getIME() {
+  int count;
+  imeGet(mobileGoalI2CAddress, &count);
+  return count;
+}
+
 MobileGoal* MobileGoal::getInstance() {
   if (instance == 0) {
     instance = new MobileGoal();

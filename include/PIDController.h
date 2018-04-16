@@ -8,9 +8,11 @@ class PIDController {
     float kD = 0;
     int motorChannel = 0;
     long integral = 0;
+    float derivative = 0;
     int previousError = 0;
     int setpoint = 0;
     int currSensorValue = 0;
+    int threshold = 10; // Default value
     float deltaTime = 0;
     int lastTime = 0;
   public:
@@ -21,6 +23,8 @@ class PIDController {
     void setSetpoint(int setpoint);
     int getSetpoint();
     void sensorValue(int value);
+    void setThreshold(int threshold);
+    bool atSetpoint();
     void loop();
 };
 

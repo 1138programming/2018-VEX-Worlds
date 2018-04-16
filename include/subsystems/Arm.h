@@ -2,14 +2,17 @@
 #define ARM_H
 
 #include "main.h"
-#include "armSubmodules/FourBar.h"
-#include "armSubmodules/Wrist.h"
+#include "subsystems/armSubmodules/FourBar.h"
+#include "subsystems/armSubmodules/Wrist.h"
 
 class Arm {
   private:
     static Arm* instance;
     Wrist* wristSys;
     FourBar* fourBarSys;
+    TaskHandle task;
+    static Semaphore semaphore;
+    static void stackConeTask(void * parameter);
     Arm();
   public:
     void moveFourBar(int speed);
@@ -20,6 +23,9 @@ class Arm {
     int getWristSetpoint();
     void fourBarLoop();
     void wristLoop();
+    bool fourBarAtSetpoint();
+    bool wristAtSetpoint();
+    bool startStackingCone();
     static Arm* getInstance();
 };
 

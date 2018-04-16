@@ -16,3 +16,9 @@ int range(int value, int min, int max) {
 		return max;
 	return value;
 }
+
+float fabs(float value) {
+	if(value < 0)
+		return -1 * value;
+	return value;
+}

@@ -14,6 +14,7 @@ class FourBar {
     void setSetpoint(int setpoint);
     int getSetpoint();
     void loop();
+    bool atSetpoint();
     int getEncoderValue();
     static FourBar* getInstance();
 };

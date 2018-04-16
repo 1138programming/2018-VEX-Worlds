@@ -26,6 +26,10 @@ void Wrist::loop() {
   controller->loop();
 }
 
+bool Wrist::atSetpoint() {
+  return controller->atSetpoint();
+}
+
 int Wrist::getEncoderValue() {
   return encoderGet(wristEncoder);
 }

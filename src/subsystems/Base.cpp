@@ -4,6 +4,7 @@ Base* Base::instance = 0;
 
 Base::Base() {
   gyro = gyroInit(gyroPort, 196);
+  ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
 }
 
 /**
@@ -24,6 +25,35 @@ void Base::moveBase(int left, int right) {
   motorSet(rightFrontBase, right);
   motorSet(rightMiddleBase, right);
   motorSet(rightRearBase, right);
+}
+
+void Base::resetGyro() {
+  gyroReset(gyro);
+}
+
+int Base::getGyro() {
+  return gyroGet(gyro); // In degrees
+}
+
+void Base::resetEncoders() {
+  imeReset(baseLeftI2CAddress);
+  imeReset(baseRightI2CAddress);
+}
+
+int Base::getLeftIME() {
+  int count;
+  imeGet(baseLeftI2CAddress, &count);
+  return count;
+}
+
+int Base::getRightIME() {
+  int count;
+  imeGet(baseRightI2CAddress, &count);
+  return count;
+}
+
+int Base::getUltrasonic() {
+  return ultrasonicGet(ultrasonic); // In centimeters
 }
 
 Base* Base::getInstance() {

@@ -9,4 +9,6 @@ bool getLimitSwitch(unsigned char pin);
 
 int range(int value, int min = -KMaxMotorSpeed, int max = KMaxMotorSpeed);
 
+float fabs(float value);
+
 #endif

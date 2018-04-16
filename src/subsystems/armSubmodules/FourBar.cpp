@@ -26,6 +26,10 @@ void FourBar::loop() {
   controller->loop();
 }
 
+bool FourBar::atSetpoint() {
+  return controller->atSetpoint();
+}
+
 int FourBar::getEncoderValue() {
   return encoderGet(fourBarEncoder);
 }

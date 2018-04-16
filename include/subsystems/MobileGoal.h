@@ -8,6 +8,8 @@ class MobileGoal {
     MobileGoal();
   public:
     void moveMobileGoal(int speed);
+    void resetIME();
+    int getIME();
     static MobileGoal* getInstance();
 };
 
