@@ -82,6 +82,6 @@ void operatorControl() {
 			stackingCone = arm->startStackingCone();
 		}
 
-		delay(delayTime); // Small delay
+		delay(DELAY_TIME); // Small delay
 	}
 }

@@ -12,6 +12,8 @@
 //#include "subsystems/Arm.h"
 //#include "subsystems/MobileGoal.h"
 
+#define DEFAULT_TASK_TIME 10000
+#define DELAY_TIME 10
 
 // Motors
 // Left base motors
@@ -65,6 +67,5 @@ const int wristEncoderBottomPort = 9;
 
 // Other constants
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct
-const long unsigned int delayTime = 10;
 
 #endif

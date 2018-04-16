@@ -68,23 +68,28 @@ bool Arm::startStackingCone() {
 
 void Arm::stackConeTask(void * parameter) {
   unsigned int startTime;
+  int step = 0;
   Arm* arm = instance;
 
-  // Set four bar to top position
+  // Set four bar to top position and set wrist to point downwards
   startTime = millis();
-  arm->setFourBarSetpoint((int)(fourBarEncoderTicks / 4));
-  while(!arm->fourBarAtSetpoint() || millis() > startTime + 5000) { // PID loop
-    arm->fourBarLoop();
-    delay(delayTime);
-  }
 
-  // Set wrist to horizontal out from the robot
-  startTime = millis();
-  arm->setWristSetpoint((int)(encoderTicks * 0.75));
-  while(!arm->wristAtSetpoint() || millis() > startTime + 5000) { // PID loop
-    arm->wristLoop();
-    arm->fourBarLoop();
-    delay(delayTime);
+  //Main while loop
+  while(!arm->fourBarAtSetpoint() && millis() < startTime + DEFAULT_TASK_TIME) { // PID loop
+    switch(step) {
+      case 0: // Set four bar and wrist setpoints
+        arm->setFourBarSetpoint((int)(fourBarEncoderTicks / 4));
+        arm->setWristSetpoint((int)(encoderTicks * 0.75));
+        step++;
+        return;
+      case 1: // Loop the four bar and wrist until they are at the desired setpoint
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(arm->fourBarAtSetpoint() && arm->wristAtSetpoint())
+          step++;
+        return;
+    }
+    delay(DELAY_TIME);
   }
 
   //Gives up the semaphore
