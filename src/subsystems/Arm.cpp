@@ -66,33 +66,73 @@ bool Arm::startStackingCone() {
   return false;
 }
 
+// Stack cone task
 void Arm::stackConeTask(void * parameter) {
-  unsigned int startTime;
-  int step = 0;
-  Arm* arm = instance;
+  Arm* arm = instance; // Gets the arm subsystem
+  unsigned int startTime; // This variable will save the time at which main loop of the task starts
+  unsigned int timeStamp; // This variable will save the time at which each step in the loop starts
+  int lastStep = 0; // Compare to the current step in order to update timeStamp when the current step changes
+  int step = 0; // The step the task is on
+  int totalSteps = 7; // Total number of steps
 
   // Set four bar to top position and set wrist to point downwards
   startTime = millis();
+  timeStamp = millis();
 
-  //Main while loop
-  while(!arm->fourBarAtSetpoint() && millis() < startTime + DEFAULT_TASK_TIME) { // PID loop
+  //Loop which will run until the steps are finished or after 20 seconds have passed as a precaution
+  while(step < totalSteps && millis() < startTime + DEFAULT_TASK_TIME) {
     switch(step) {
-      case 0: // Set four bar and wrist setpoints
-        arm->setFourBarSetpoint((int)(fourBarEncoderTicks / 4));
+      case 0: // Lift the four bar and make the wrist point downward
+        arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
         arm->setWristSetpoint((int)(encoderTicks * 0.75));
         step++;
         return;
-      case 1: // Loop the four bar and wrist until they are at the desired setpoint
+      case 1: // Loop the four bar and wrist until they are at the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->fourBarAtSetpoint() && arm->wristAtSetpoint())
           step++;
         return;
+      case 2: // Lower the four bar and start running the collector
+        arm->setFourBarSetpoint(0);
+        arm->moveCollector(127);
+        step++;
+        return;
+      case 3: // Loop the four bar and wrist until the four bar is at the setpoint
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(arm->fourBarAtSetpoint())
+          step++;
+        return;
+      case 4: // Wait half a second for the collector to pick up the cone
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(millis() - timeStamp > 500)
+          step++;
+        return;
+      case 5: // Lift the four bar and stop the collector
+        arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
+        arm->moveCollector(0);
+        step++;
+        return;
+      case 6: // Loop the four bar and wrist until the four bar is at the setpoint
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(arm->fourBarAtSetpoint())
+          step++;
+        return;
     }
+
+    // Update timeStamp
+    if (step != lastStep) {
+      lastStep = step;
+      timeStamp = millis();
+    }
+
     delay(DELAY_TIME);
   }
 
-  //Gives up the semaphore
+  // Gives up the semaphore, allowing this task to be called again later
   semaphoreGive(semaphore);
 }
 

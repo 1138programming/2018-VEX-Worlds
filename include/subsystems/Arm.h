@@ -15,6 +15,7 @@ class Arm {
     TaskHandle task;
     static Semaphore semaphore;
     static void stackConeTask(void * parameter);
+    void clearStep();
     Arm();
   public:
     void moveFourBar(int speed);
