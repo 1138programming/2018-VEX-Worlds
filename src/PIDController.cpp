@@ -21,6 +21,7 @@ void PIDController::setKd(float kD) {
 }
 
 void PIDController::setSetpoint(int setpoint) {
+  printf("Setpoint set to %d/n", setpoint);
   this->setpoint = setpoint;
   integral = 0;
 }

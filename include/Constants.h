@@ -26,14 +26,16 @@ const int rightFrontBase = 1;
 const int rightMiddleBase = 4;
 const int rightRearBase = 10;
 
-// Mobile goal motors
-const int leftMobileGoal = 5;
-const int rightMobileGoal = 3;
+// Mobile goal motor
+const int mobileGoalPort = 5;
+//const int rightMobileGoal = 3;
+
+//Collector motor
+const int collectorPort = 3;
 
 // Arm submodule motors
 const int wristPort = 2;
 const int fourBarPort = 7;
-const int collectorPort = 11;
 
 
 // IME Addresses

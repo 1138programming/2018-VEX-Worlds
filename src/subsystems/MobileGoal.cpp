@@ -7,8 +7,8 @@ MobileGoal::MobileGoal() {
 
 void MobileGoal::moveMobileGoal(int speed) {
   speed = threshold(speed);
-  motorSet(leftMobileGoal, speed);
-  motorSet(rightMobileGoal, speed);
+  motorSet(mobileGoalPort, speed);
+  //motorSet(rightMobileGoal, speed);
 }
 
 void resetIME() {
