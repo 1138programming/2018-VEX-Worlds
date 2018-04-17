@@ -71,9 +71,14 @@ void Arm::stackConeTask(void * parameter) {
   Arm* arm = instance; // Gets the arm subsystem
   unsigned int startTime; // This variable will save the time at which main loop of the task starts
   unsigned int timeStamp; // This variable will save the time at which each step in the loop starts
-  int lastStep = 0; // Compare to the current step in order to update timeStamp when the current step changes
   int step = 0; // The step the task is on
   int totalSteps = 7; // Total number of steps
+
+  // Update timeStamp and increment step
+  auto clearStep = [&] {
+    timeStamp = millis();
+    step++;
+  };
 
   // Set four bar to top position and set wrist to point downwards
   startTime = millis();
@@ -85,48 +90,42 @@ void Arm::stackConeTask(void * parameter) {
       case 0: // Lift the four bar and make the wrist point downward
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
         arm->setWristSetpoint((int)(encoderTicks * 0.75));
-        step++;
+        clearStep();
         return;
       case 1: // Loop the four bar and wrist until they are at the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->fourBarAtSetpoint() && arm->wristAtSetpoint())
-          step++;
+          clearStep();
         return;
       case 2: // Lower the four bar and start running the collector
         arm->setFourBarSetpoint(0);
         arm->moveCollector(127);
-        step++;
+        clearStep();
         return;
       case 3: // Loop the four bar and wrist until the four bar is at the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->fourBarAtSetpoint())
-          step++;
+          clearStep();
         return;
       case 4: // Wait half a second for the collector to pick up the cone
         arm->fourBarLoop();
         arm->wristLoop();
         if(millis() - timeStamp > 500)
-          step++;
+          clearStep();
         return;
       case 5: // Lift the four bar and stop the collector
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
         arm->moveCollector(0);
-        step++;
+        clearStep();
         return;
       case 6: // Loop the four bar and wrist until the four bar is at the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->fourBarAtSetpoint())
-          step++;
+          clearStep();
         return;
-    }
-
-    // Update timeStamp
-    if (step != lastStep) {
-      lastStep = step;
-      timeStamp = millis();
     }
 
     delay(DELAY_TIME);
