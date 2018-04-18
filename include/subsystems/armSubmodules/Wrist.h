@@ -12,6 +12,7 @@ class Wrist {
   public:
     void move(int speed);
     void setSetpoint(int setpoint);
+    void lock();
     int getSetpoint();
     void loop();
     bool atSetpoint();

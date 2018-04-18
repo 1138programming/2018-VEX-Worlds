@@ -80,25 +80,34 @@ void operatorControl() {
 		// Move base
 		base->moveBase(leftSide, rightSide);
 
-		if(!stackingCone) {
+		if (!stackingCone) {
 			// Move wrist
 			/*pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
 			arm->setWristSetpoint(pidSetpoint);
 			arm->wristLoop();*/
 
+			/*Uncomment when ready to test the wrist
+			if (threshold(wristChannel, 10) == 0) {
+				printf("Wrist locked\n");
+				arm->wristLoop();
+			} else {
+				arm->moveWrist(wristChannel);
+				printf("Locking four bar to "); // No newline here so that lockWrist can print what the wrist is being locked to on the same line
+				arm->lockWrist();
+			}*/
+
 			// Move four bar
-			arm->moveFourBar(fourBarChannel);
-			printf("Four bar channel is %d\n", abs(threshold(fourBarChannel, 10)));
-			if (abs(threshold(fourBarChannel, 10)) > 0) {
+			if (threshold(fourBarChannel, 10) == 0) {
 				//deltaArm = (int)(((float)encoderTicks / 100) * ((float)fourBarChannel / KMaxJoystickValue));
 				//pidSetpoint = arm->getFourBarSetpoint() + deltaArm;
 				//arm->setFourBarSetpoint(pidSetpoint);
 				//arm->setFourBarSetpoint((int)((float)fourBarChannel * 3.54));
-				printf("Locking four bar to ");
-				arm->lockFourBar();
+				printf("Four bar locked\n");
 				arm->fourBarLoop();
 			} else {
-				printf("Four bar locked\n");
+				arm->moveFourBar(fourBarChannel);
+				printf("Locking four bar to "); // No newline here so that lockFourBar can print what the four bar is being locked to on the same line
+				arm->lockFourBar();
 			}
 			//printf("Four bar setpoint set to %d\n", pidSetpoint);
 

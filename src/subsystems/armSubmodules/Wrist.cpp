@@ -17,6 +17,10 @@ void Wrist::setSetpoint(int setpoint) {
   controller->setSetpoint(setpoint);
 }
 
+void Wrist::lock() {
+  controller->setSetpoint(getEncoderValue());
+}
+
 int Wrist::getSetpoint() {
   return controller->getSetpoint();
 }
