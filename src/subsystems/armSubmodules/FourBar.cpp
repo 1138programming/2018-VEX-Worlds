@@ -27,8 +27,7 @@ int FourBar::getSetpoint() {
 }
 
 void FourBar::loop() {
-  int encoderValue = getEncoderValue();
-  controller->sensorValue(encoderValue);
+  controller->sensorValue(getEncoderValue());
   controller->loop();
 }
 

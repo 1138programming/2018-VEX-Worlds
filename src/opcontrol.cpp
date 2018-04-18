@@ -85,7 +85,8 @@ void operatorControl() {
 			deltaWrist = threshold(wristChannel, 10);
 			if (deltaWrist) {
 				arm->moveWrist(deltaWrist);
-				arm->setWristSetpoint(arm->getWristPosition());
+				arm->lockWrist();
+				//arm->setWristSetpoint(arm->getWristPosition());
 			} else {
 				arm->wristLoop();
 			}
@@ -94,7 +95,8 @@ void operatorControl() {
 			deltaArm = threshold(fourBarChannel, 10);
 			if (deltaArm) {
 				arm->moveFourBar(deltaArm);
-				arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
+				arm->lockFourBar();
+				//arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
 			} else {
 				arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
 			}

@@ -6,13 +6,15 @@
 class MobileGoal {
   private:
     int encoderTicks;
-    PIDController* mogoController;
+    PIDController* controller;
     static MobileGoal* instance;
     MobileGoal();
   public:
     void moveMobileGoal(int speed);
     void loop();
     void setSetpoint(int setpoint);
+    void lock();
+    int getSetpoint();
     void resetIME();
     int getIME();
     static MobileGoal* getInstance();

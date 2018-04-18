@@ -3,28 +3,35 @@
 MobileGoal* MobileGoal::instance = 0;
 
 MobileGoal::MobileGoal() {
-  mogoController = new PIDController(mobileGoalPort, 0.5, 0.0, 0.05);
+  controller = new PIDController(mobileGoalPort, 0.5, 0.0, 0.05);
   resetIME();
 }
 
 void MobileGoal::moveMobileGoal(int speed) {
   speed = threshold(speed);
   motorSet(mobileGoalPort, speed);
-  //motorSet(rightMobileGoal, speed);
 }
 
 void MobileGoal::setSetpoint(int setpoint) {
-  mogoController->setSetpoint(range(setpoint, -20, 1770));
+  controller->setSetpoint(range(setpoint, -20, 1770));
+}
+
+void MobileGoal::lock() {
+  controller->setSetpoint(getIME());
+}
+
+int MobileGoal::getSetpoint() {
+  return controller->getSetpoint();
 }
 
 void MobileGoal::loop() {
-  mogoController->sensorValue(getIME());
-  mogoController->loop();
+  controller->sensorValue(getIME());
+  controller->loop();
 }
 
 void MobileGoal::resetIME() {
   imeReset(mobileGoalI2CAddress);
-  mogoController->setSetpoint(0); // Reset setpoint too
+  controller->setSetpoint(0); // Reset setpoint too
 }
 
 int MobileGoal::getIME() {

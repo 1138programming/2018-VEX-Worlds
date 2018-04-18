@@ -26,8 +26,7 @@ int Wrist::getSetpoint() {
 }
 
 void Wrist::loop() {
-  int encoderValue = getEncoderValue();
-  controller->sensorValue(encoderValue);
+  controller->sensorValue(getEncoderValue());
   controller->loop();
 }
 
