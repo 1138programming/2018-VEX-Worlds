@@ -26,7 +26,9 @@ class Arm {
     void lockFourBar();
     void lockWrist();
     int getFourBarSetpoint();
+    int getFourBarPosition();
     int getWristSetpoint();
+    int getWristPosition();
     void fourBarLoop();
     void wristLoop();
     bool fourBarAtSetpoint();

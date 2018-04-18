@@ -42,8 +42,16 @@ int Arm::getFourBarSetpoint() {
   return fourBar->getSetpoint();
 }
 
+int Arm::getFourBarPosition() {
+  return fourBar->getEncoderValue();
+}
+
 int Arm::getWristSetpoint() {
   return wrist->getSetpoint();
+}
+
+int Arm::getWristPosition() {
+  return wrist->getEncoderValue();
 }
 
 void Arm::fourBarLoop() {

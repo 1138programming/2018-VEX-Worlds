@@ -5,7 +5,7 @@ Wrist* Wrist::instance = 0;
 Wrist::Wrist() {
   wristEncoder = encoderInit(wristEncoderTopPort, wristEncoderBottomPort, false);
   resetEncoder();
-  controller = new PIDController(wristPort, 0.1, 0, 0);
+  controller = new PIDController(wristPort, 1.0, 0, 0);
 }
 
 void Wrist::move(int speed) {

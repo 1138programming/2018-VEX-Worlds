@@ -5,7 +5,7 @@ FourBar* FourBar::instance = 0;
 FourBar::FourBar() {
   fourBarEncoder = encoderInit(fourBarEncoderTopPort, fourBarEncoderBottomPort, true);
   resetEncoder();
-  controller = new PIDController(fourBarPort, 0.5, 0, 0);
+  controller = new PIDController(fourBarPort, 0.5, 0.0, 0.0);
 }
 
 void FourBar::move(int speed) {

@@ -40,7 +40,7 @@ void operatorControl() {
 	Arm* arm = Arm::getInstance();
 	MobileGoal* moGoal = MobileGoal::getInstance();
 
-	int pidSetpoint, deltaArm;
+	int deltaArm, deltaWrist;
 
 	/*int startTime;
 	startTime = millis();
@@ -81,52 +81,33 @@ void operatorControl() {
 		base->moveBase(leftSide, rightSide);
 
 		if (!stackingCone) {
-			// Move wrist
-			/*pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
-			arm->setWristSetpoint(pidSetpoint);
-			arm->wristLoop();*/
-
-			/*Uncomment when ready to test the wrist
-			if (threshold(wristChannel, 10) == 0) {
-				printf("Wrist locked\n");
-				arm->wristLoop();
+			// Move the wrist
+			deltaWrist = threshold(wristChannel, 10);
+			if (deltaWrist) {
+				arm->moveWrist(deltaWrist);
+				arm->setWristSetpoint(arm->getWristPosition());
 			} else {
-				arm->moveWrist(wristChannel);
-				printf("Locking four bar to "); // No newline here so that lockWrist can print what the wrist is being locked to on the same line
-				arm->lockWrist();
-			}*/
+				arm->wristLoop();
+			}
 
 			// Move four bar
-			if (threshold(fourBarChannel, 10) == 0) {
-				//deltaArm = (int)(((float)encoderTicks / 100) * ((float)fourBarChannel / KMaxJoystickValue));
-				//pidSetpoint = arm->getFourBarSetpoint() + deltaArm;
-				//arm->setFourBarSetpoint(pidSetpoint);
-				//arm->setFourBarSetpoint((int)((float)fourBarChannel * 3.54));
-				printf("Four bar locked\n");
-				arm->fourBarLoop();
+			deltaArm = threshold(fourBarChannel, 10);
+			if (deltaArm) {
+				arm->moveFourBar(deltaArm);
+				arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
 			} else {
-				arm->moveFourBar(fourBarChannel);
-				printf("Locking four bar to "); // No newline here so that lockFourBar can print what the four bar is being locked to on the same line
-				arm->lockFourBar();
+				arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
 			}
-			//printf("Four bar setpoint set to %d\n", pidSetpoint);
-
-			//if (arm->fourBarAtSetpoint())
-				//printf("Four bar at setpoint \n");
 		}
-
-		//Basic control
-		//arm->moveWrist(wristChannel);
-		//arm->moveFourBar(fourBarChannel);
 
 		// Move mobile goal
 		if (moGoalFwd) {
-			moGoal->moveMobileGoal(KMaxMotorSpeed);
+			moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
 		} else if(moGoalBck) {
-			moGoal->moveMobileGoal(-KMaxMotorSpeed);
-		} else {
-			moGoal->moveMobileGoal(0);
+			moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
 		}
+		moGoal->loop();
+		printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
 
 		// Start collector
 		if (cllFwd && !stackingCone) {
