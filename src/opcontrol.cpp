@@ -40,7 +40,29 @@ void operatorControl() {
 	Arm* arm = Arm::getInstance();
 	MobileGoal* moGoal = MobileGoal::getInstance();
 
-	int pidSetpoint;
+	int pidSetpoint, deltaArm;
+
+	/*int startTime;
+	startTime = millis();
+	int toSet;
+	toSet = (int)(fourBarEncoderTicks * 0.25);
+	printf("toSet: %d\n", toSet);
+	arm->setFourBarSetpoint(toSet);
+	while((millis() - startTime) < 2500) {
+		//arm->fourBarLoop();
+		//printf("Milliseconds: %d\n", (int)(millis() - startTime));
+		delay(DELAY_TIME);
+	}
+
+	printf("Four bar setpoint set to %d\n", arm->getFourBarSetpoint());
+
+	while(true) {
+		arm->fourBarLoop();
+
+		//if (arm->fourBarAtSetpoint())
+		//	printf("Four bar at setpoint \n");
+		delay(DELAY_TIME);
+	}*/
 	while (true) {
 		// Set joysticks
 		leftSide = joystickGetAnalog(1, 3); // Left y-channel
@@ -51,8 +73,8 @@ void operatorControl() {
 		// Set buttons
 		moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
 		moGoalBck = joystickGetDigital(1, 6, JOY_UP);
-		cllFwd = joystickGetDigital(2, 7, JOY_DOWN);
-		cllBck = joystickGetDigital(2, 7, JOY_UP);
+		cllFwd = joystickGetDigital(2, 5, JOY_UP);
+		cllBck = joystickGetDigital(2, 5, JOY_DOWN);
 		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
 
 		// Move base
@@ -60,18 +82,28 @@ void operatorControl() {
 
 		if(!stackingCone) {
 			// Move wrist
-			pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
+			/*pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
 			arm->setWristSetpoint(pidSetpoint);
-			arm->wristLoop();
+			arm->wristLoop();*/
 
 			// Move four bar
-			pidSetpoint = arm->getFourBarSetpoint() + ((encoderTicks / 100) * (fourBarChannel / KMaxJoystickValue));
-			arm->setFourBarSetpoint(pidSetpoint);
-			arm->fourBarLoop();
-			printf("Four bar setpoint set to %d/n", pidSetpoint);
+			arm->moveFourBar(fourBarChannel);
+			printf("Four bar channel is %d\n", abs(threshold(fourBarChannel, 10)));
+			if (abs(threshold(fourBarChannel, 10)) > 0) {
+				//deltaArm = (int)(((float)encoderTicks / 100) * ((float)fourBarChannel / KMaxJoystickValue));
+				//pidSetpoint = arm->getFourBarSetpoint() + deltaArm;
+				//arm->setFourBarSetpoint(pidSetpoint);
+				//arm->setFourBarSetpoint((int)((float)fourBarChannel * 3.54));
+				printf("Locking four bar to ");
+				arm->lockFourBar();
+				arm->fourBarLoop();
+			} else {
+				printf("Four bar locked\n");
+			}
+			//printf("Four bar setpoint set to %d\n", pidSetpoint);
 
-			if (arm->fourBarAtSetpoint())
-				printf("Four bar at setpoint /n");
+			//if (arm->fourBarAtSetpoint())
+				//printf("Four bar at setpoint \n");
 		}
 
 		//Basic control

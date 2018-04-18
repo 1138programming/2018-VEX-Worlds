@@ -47,8 +47,8 @@ const unsigned char baseRightI2CAddress = 2;
 //Motor and encoder constants
 const int KMaxMotorSpeed = 127;
 const int KMaxJoystickValue = 127;
-const int encoderTicks = 90; // Encoder ticks in one revolution
-const int fourBarEncoderTicks = 450; // Accounts for the 5:1 gear ratio
+const int encoderTicks = 360; // Encoder ticks in one revolution
+const int fourBarEncoderTicks = 5 * encoderTicks; // Accounts for the 5:1 gear ratio
 
 
 // Analog Sensors
@@ -61,10 +61,10 @@ const int gyroPort = 1;
 const int fourBarLimitSwitch = 1;
 const int ultrasonicPing = 4;
 const int ultrasonicEcho = 5;
-const int fourBarEncoderTopPort = 6;
-const int fourBarEncoderBottomPort = 7;
-const int wristEncoderTopPort = 8;
-const int wristEncoderBottomPort = 9;
+const int fourBarEncoderTopPort = 7;
+const int fourBarEncoderBottomPort = 6;
+const int wristEncoderTopPort = 9;
+const int wristEncoderBottomPort = 8;
 
 
 // Other constants

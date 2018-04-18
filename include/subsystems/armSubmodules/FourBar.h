@@ -12,10 +12,12 @@ class FourBar {
   public:
     void move(int speed);
     void setSetpoint(int setpoint);
+    void lock();
     int getSetpoint();
     void loop();
     bool atSetpoint();
     int getEncoderValue();
+    void resetEncoder();
     static FourBar* getInstance();
 };
 

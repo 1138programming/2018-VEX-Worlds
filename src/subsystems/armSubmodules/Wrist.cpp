@@ -4,6 +4,7 @@ Wrist* Wrist::instance = 0;
 
 Wrist::Wrist() {
   wristEncoder = encoderInit(wristEncoderTopPort, wristEncoderBottomPort, false);
+  resetEncoder();
   controller = new PIDController(wristPort, 0.1, 0, 0);
 }
 
@@ -32,6 +33,10 @@ bool Wrist::atSetpoint() {
 
 int Wrist::getEncoderValue() {
   return encoderGet(wristEncoder);
+}
+
+void Wrist::resetEncoder() {
+  encoderReset(wristEncoder);
 }
 
 Wrist* Wrist::getInstance() {

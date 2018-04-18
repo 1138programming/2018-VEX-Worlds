@@ -2,7 +2,7 @@
 
 PIDController::PIDController(int motorChannel, float kP, float kI, float kD) {
   this->motorChannel = motorChannel;
-  this->kP = 0;
+  this->kP = kP;
   this->kI = kI;
   this->kD = kD;
   //this->controllers.push_back(this);
@@ -21,7 +21,7 @@ void PIDController::setKd(float kD) {
 }
 
 void PIDController::setSetpoint(int setpoint) {
-  printf("Setpoint set to %d/n", setpoint);
+  //printf("Setpoint set to %d\n", setpoint);
   this->setpoint = setpoint;
   integral = 0;
 }
@@ -51,7 +51,7 @@ void PIDController::loop() {
 }
 
 bool PIDController::atSetpoint() {
-  if (range(currSensorValue, setpoint - threshold, setpoint + threshold) && fabs(derivative) < 0.5) {
+  if (range(currSensorValue, setpoint - threshold, setpoint + threshold) && fabs(derivative) < 0.1) {
       return true;
   }
   return false;

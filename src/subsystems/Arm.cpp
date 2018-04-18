@@ -30,6 +30,10 @@ void Arm::setWristSetpoint(int setpoint) {
   wrist->setSetpoint(setpoint);
 }
 
+void Arm::lockFourBar() {
+  fourBar->lock();
+}
+
 int Arm::getFourBarSetpoint() {
   return fourBar->getSetpoint();
 }
