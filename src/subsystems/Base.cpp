@@ -5,6 +5,16 @@ Base* Base::instance = 0;
 Base::Base() {
   gyro = gyroInit(gyroPort, 196);
   ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
+
+  // Get left base motors
+  leftFrontBaseMotor = Motor::getMotor(leftFrontBasePort);
+  leftMiddleBaseMotor = Motor::getMotor(leftMiddleBasePort);
+  leftRearBaseMotor = Motor::getMotor(leftRearBasePort);
+
+  // Get right base motors
+  rightFrontBaseMotor = Motor::getMotor(rightFrontBasePort);
+  rightMiddleBaseMotor = Motor::getMotor(rightMiddleBasePort);
+  rightRearBaseMotor = Motor::getMotor(rightRearBasePort);
 }
 
 /**

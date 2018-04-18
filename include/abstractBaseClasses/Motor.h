@@ -7,10 +7,13 @@ class Motor {
   private:
     int channel;
     int speed;
+    Motor(int channel);
+    static Motor* motorInstances[];
   public:
     void setSpeed(int speed);
     int getSpeed();
-    Motor(int channel);
+    static void init();
+    static Motor* getMotor(int motorPort);
 };
 
 #endif

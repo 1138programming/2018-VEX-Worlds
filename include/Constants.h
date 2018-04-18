@@ -14,26 +14,27 @@
 
 #define DEFAULT_TASK_TIME 20000
 #define DELAY_TIME 10
+#define MAX_MOTORS 10
 
-// Motors
-// Left base motors
-const int leftFrontBase = 6;
-const int leftMiddleBase = 8;
-const int leftRearBase = 9;
+// Motor ports
+// Left base motor ports
+const int leftFrontBasePort = 6;
+const int leftMiddleBasePort = 8;
+const int leftRearBasePort = 9;
 
-// Right base motors
-const int rightFrontBase = 1;
-const int rightMiddleBase = 4;
-const int rightRearBase = 10;
+// Right base motor ports
+const int rightFrontBasePort = 1;
+const int rightMiddleBasePort = 4;
+const int rightRearBasePort = 10;
 
-// Mobile goal motor
+// Mobile goal moto port
 const int mobileGoalPort = 5;
 //const int rightMobileGoal = 3;
 
-//Collector motor
+//Collector motor port
 const int collectorPort = 3;
 
-// Arm submodule motors
+// Arm submodule motor ports
 const int wristPort = 2;
 const int fourBarPort = 7;
 

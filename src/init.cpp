@@ -42,4 +42,6 @@ void initializeIO() {
 void initialize() {
   printf("%d IMEs Initialized.\n", imeInitializeAll());
   setTeamName("1138");
+
+  Motor::init();
 }

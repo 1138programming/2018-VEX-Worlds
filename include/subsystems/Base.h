@@ -8,6 +8,17 @@ class Base {
     static Base* instance;
     Gyro gyro;
     Ultrasonic ultrasonic;
+
+    // Left base motors
+    Motor* leftFrontBaseMotor;
+    Motor* leftMiddleBaseMotor;
+    Motor* leftRearBaseMotor;
+
+    // Right base motors
+    Motor* rightFrontBaseMotor;
+    Motor* rightMiddleBaseMotor;
+    Motor* rightRearBaseMotor;
+    
     Base();
   public:
     void moveBase(int left, int right);
