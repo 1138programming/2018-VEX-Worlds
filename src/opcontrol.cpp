@@ -58,7 +58,7 @@ void operatorControl() {
 		// Move base
 		base->moveBase(leftSide, rightSide);
 
-		/*if(!stackingCone) {
+		if(!stackingCone) {
 			// Move wrist
 			pidSetpoint = arm->getWristSetpoint() + ((encoderTicks / 100) * (wristChannel / KMaxJoystickValue));
 			arm->setWristSetpoint(pidSetpoint);
@@ -68,11 +68,15 @@ void operatorControl() {
 			pidSetpoint = arm->getFourBarSetpoint() + ((encoderTicks / 100) * (fourBarChannel / KMaxJoystickValue));
 			arm->setFourBarSetpoint(pidSetpoint);
 			arm->fourBarLoop();
-		}*/
+			printf("Four bar setpoint set to %d/n", pidSetpoint);
+
+			if (arm->fourBarAtSetpoint())
+				printf("Four bar at setpoint /n");
+		}
 
 		//Basic control
-		arm->moveWrist(wristChannel);
-		arm->moveFourBar(fourBarChannel);
+		//arm->moveWrist(wristChannel);
+		//arm->moveFourBar(fourBarChannel);
 
 		// Move mobile goal
 		if (moGoalFwd) {
@@ -84,7 +88,7 @@ void operatorControl() {
 		}
 
 		// Start collector
-		if (cllFwd) {
+		if (cllFwd && !stackingCone) {
 			arm->moveCollector(KMaxMotorSpeed); // Collector forward
 		} else if(cllBck) {
 			arm->moveCollector(-KMaxMotorSpeed); // Collector backward
@@ -93,9 +97,9 @@ void operatorControl() {
 		}
 
 		// Start stacking a cone (stop if a cone is already being stacked)
-		/*if (stackCone) {
+		if (stackCone) {
 			stackingCone = arm->startStackingCone();
-		}*/
+		}
 
 		delay(DELAY_TIME); // Small delay
 	}
