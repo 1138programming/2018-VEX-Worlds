@@ -14,7 +14,7 @@ Base::Base() {
  */
 void Base::moveBase(int left, int right) {
   left = threshold(left);
-  right = -threshold(right);
+  right = threshold(right);
 
   //Left motors
   motorSet(leftFrontBase, left);

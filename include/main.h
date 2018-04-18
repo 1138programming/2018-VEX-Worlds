@@ -28,7 +28,8 @@
 #include <API.h>
 #include <Constants.h>
 #include <common.h>
-#include <PIDController.h>
+#include <abstractBaseClasses/Motor.h>
+#include <abstractBaseClasses/PIDController.h>
 #include <subsystems/Base.h>
 #include <subsystems/Arm.h>
 #include <subsystems/armSubmodules/FourBar.h>

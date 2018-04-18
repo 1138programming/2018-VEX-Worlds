@@ -1,7 +1,7 @@
 #ifndef MOBILEGOAL_H
 #define MOBILEGOAL_H
 
-#include "PIDController.h"
+#include "abstractBaseClasses/PIDController.h"
 
 class MobileGoal {
   private:

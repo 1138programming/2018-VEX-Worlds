@@ -94,10 +94,12 @@ void operatorControl() {
 			// Move four bar
 			deltaArm = threshold(fourBarChannel, 10);
 			if (deltaArm) {
+				//printf("Delta Arm is %d\n", deltaArm);
 				arm->moveFourBar(deltaArm);
-				arm->lockFourBar();
-				//arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
+				//arm->lockFourBar();
+				arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
 			} else {
+				//printf("Four Bar setpoint is %d\n", arm->getFourBarSetpoint());
 				arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
 			}
 		}
@@ -109,7 +111,7 @@ void operatorControl() {
 			moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
 		}
 		moGoal->loop();
-		printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
+		//printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
 
 		// Start collector
 		if (cllFwd && !stackingCone) {
@@ -122,7 +124,9 @@ void operatorControl() {
 
 		// Start stacking a cone (stop if a cone is already being stacked)
 		if (stackCone) {
+			//printf("Stack cone button pressed\n");
 			stackingCone = arm->startStackingCone();
+			printf("FINISHED! %d\n", stackingCone);
 		}
 
 		delay(DELAY_TIME); // Small delay
