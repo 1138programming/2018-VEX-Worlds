@@ -3,13 +3,16 @@
 MobileGoal* MobileGoal::instance = 0;
 
 MobileGoal::MobileGoal() {
-  controller = new PIDController(mobileGoalPort, 0.5, 0.0, 0.05);
+  // Get mobile goal motor
+  mobileGoalMotor = Motor::getMotor(mobileGoalPort);
+
+  controller = new PIDController(mobileGoalMotor, 0.5, 0.0, 0.05);
   resetIME();
 }
 
 void MobileGoal::moveMobileGoal(int speed) {
   speed = threshold(speed);
-  motorSet(mobileGoalPort, speed);
+  mobileGoalMotor->setSpeed(speed);
 }
 
 void MobileGoal::setSetpoint(int setpoint) {

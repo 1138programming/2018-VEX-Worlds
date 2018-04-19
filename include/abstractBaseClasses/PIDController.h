@@ -1,12 +1,14 @@
 #ifndef _SUBSYSTEMS_PIDCONTROLLER_H_
 #define _SUBSYSTEMS_PIDCONTROLLER_H_
 
+#include "Motor.h"
+
 class PIDController {
   private:
     float kP = 0;
     float kI = 0;
     float kD = 0;
-    int motorChannel = 0;
+    Motor* outputMotor;
     long integral = 0;
     float derivative = 0;
     int previousError = 0;
@@ -16,7 +18,7 @@ class PIDController {
     float deltaTime = 0;
     int lastTime = 0;
   public:
-    PIDController(int motorChannel, float kP = 1, float kI = 0, float kD = 0);
+    PIDController(Motor* motorChannel, float kP = 1, float kI = 0, float kD = 0);
     void setKp(float kP);
     void setKi(float kI);
     void setKd(float kD);

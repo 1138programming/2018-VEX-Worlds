@@ -3,14 +3,15 @@
 Wrist* Wrist::instance = 0;
 
 Wrist::Wrist() {
+  wristMotor = Motor::getMotor(wristPort);
   wristEncoder = encoderInit(wristEncoderTopPort, wristEncoderBottomPort, false);
   resetEncoder();
-  controller = new PIDController(wristPort, 1.0, 0, 0);
+  controller = new PIDController(wristMotor, 1.0, 0, 0);
 }
 
 void Wrist::move(int speed) {
   speed = threshold(speed);
-  motorSet(wristPort, speed);
+  wristMotor->setSpeed(speed);
 }
 
 void Wrist::setSetpoint(int setpoint) {

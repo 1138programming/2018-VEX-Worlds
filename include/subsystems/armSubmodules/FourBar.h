@@ -8,6 +8,7 @@ class FourBar {
     static FourBar* instance;
     Encoder fourBarEncoder;
     PIDController* controller;
+    Motor* fourBarMotor;
     FourBar();
   public:
     void move(int speed);

@@ -1,6 +1,6 @@
 #include "main.h"
 
-Motor* motorInstances[MAX_MOTORS];
+Motor* Motor::motorInstances[MAX_MOTORS];
 
 Motor::Motor(int channel) {
   this->channel = channel;
@@ -16,11 +16,11 @@ int Motor::getSpeed() {
 }
 
 void Motor::init() {
-  for (int i = 1; i <= 10; i++) {
-    motorInstances[i] = new Motor(i);
+  for (int i = 0; i < MAX_MOTORS; i++) {
+    motorInstances[i] = new Motor(i + 1);
   }
 }
 
 Motor* Motor::getMotor(int motorPort) {
-  return motorInstances[motorPort];
+  return motorInstances[motorPort - 1];
 }

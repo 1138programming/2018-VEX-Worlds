@@ -30,6 +30,8 @@
 #include <common.h>
 #include <abstractBaseClasses/Motor.h>
 #include <abstractBaseClasses/PIDController.h>
+#include <abstractBaseClasses/ShaftEncoder.h>
+#include <abstractBaseClasses/IMESensor.h>
 #include <subsystems/Base.h>
 #include <subsystems/Arm.h>
 #include <subsystems/armSubmodules/FourBar.h>

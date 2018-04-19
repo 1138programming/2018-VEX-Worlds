@@ -3,9 +3,6 @@
 Base* Base::instance = 0;
 
 Base::Base() {
-  gyro = gyroInit(gyroPort, 196);
-  ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
-
   // Get left base motors
   leftFrontBaseMotor = Motor::getMotor(leftFrontBasePort);
   leftMiddleBaseMotor = Motor::getMotor(leftMiddleBasePort);
@@ -15,6 +12,9 @@ Base::Base() {
   rightFrontBaseMotor = Motor::getMotor(rightFrontBasePort);
   rightMiddleBaseMotor = Motor::getMotor(rightMiddleBasePort);
   rightRearBaseMotor = Motor::getMotor(rightRearBasePort);
+
+  gyro = gyroInit(gyroPort, 196);
+  ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
 }
 
 /**
@@ -27,14 +27,20 @@ void Base::moveBase(int left, int right) {
   right = threshold(right);
 
   //Left motors
-  motorSet(leftFrontBase, left);
-  motorSet(leftMiddleBase, left);
-  motorSet(leftRearBase, left);
+  leftFrontBaseMotor->setSpeed(left);
+  leftMiddleBaseMotor->setSpeed(left);
+  leftRearBaseMotor->setSpeed(left);
+  //motorSet(leftFrontBase, left);
+  //motorSet(leftMiddleBase, left);
+  //motorSet(leftRearBase, left);
 
   //Right motors
-  motorSet(rightFrontBase, right);
-  motorSet(rightMiddleBase, right);
-  motorSet(rightRearBase, right);
+  rightFrontBaseMotor->setSpeed(right);
+  rightMiddleBaseMotor->setSpeed(right);
+  rightRearBaseMotor->setSpeed(right);
+  //motorSet(rightFrontBase, right);
+  //motorSet(rightMiddleBase, right);
+  //motorSet(rightRearBase, right);
 }
 
 void Base::resetGyro() {

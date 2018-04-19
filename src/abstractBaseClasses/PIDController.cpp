@@ -1,7 +1,7 @@
 #include "main.h"
 
-PIDController::PIDController(int motorChannel, float kP, float kI, float kD) {
-  this->motorChannel = motorChannel;
+PIDController::PIDController(Motor* outputMotor, float kP, float kI, float kD) {
+  this->outputMotor = outputMotor;
   this->kP = kP;
   this->kI = kI;
   this->kD = kD;
@@ -46,7 +46,7 @@ void PIDController::loop() {
   integral += error * (deltaTime / 1000);
   derivative  = (error - previousError) / (deltaTime / 1000);
   output = range(kP * error + kI * integral + kD * derivative);
-  motorSet(motorChannel, output);
+  outputMotor->setSpeed(output);
   previousError = error;
 }
 

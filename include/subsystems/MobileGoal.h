@@ -8,6 +8,7 @@ class MobileGoal {
     int encoderTicks;
     PIDController* controller;
     static MobileGoal* instance;
+    Motor* mobileGoalMotor;
     MobileGoal();
   public:
     void moveMobileGoal(int speed);

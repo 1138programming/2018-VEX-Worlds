@@ -6,6 +6,7 @@
 class Wrist {
   private:
     static Wrist* instance;
+    Motor* wristMotor;
     Encoder wristEncoder;
     PIDController* controller;
     Wrist();

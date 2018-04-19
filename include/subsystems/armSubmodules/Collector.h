@@ -6,6 +6,7 @@
 class Collector {
   private:
     static Collector* instance;
+    Motor* collectorMotor;
     Collector();
   public:
     void move(int speed);

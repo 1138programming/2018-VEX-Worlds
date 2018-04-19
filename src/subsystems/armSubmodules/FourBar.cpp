@@ -3,14 +3,15 @@
 FourBar* FourBar::instance = 0;
 
 FourBar::FourBar() {
+  fourBarMotor = Motor::getMotor(fourBarPort);
   fourBarEncoder = encoderInit(fourBarEncoderTopPort, fourBarEncoderBottomPort, true);
   resetEncoder();
-  controller = new PIDController(fourBarPort, 0.5, 0.0, 0.0);
+  controller = new PIDController(fourBarMotor, 0.5, 0.0, 0.0);
 }
 
 void FourBar::move(int speed) {
   speed = threshold(speed);
-  motorSet(fourBarPort, speed);
+  fourBarMotor->setSpeed(speed);
 }
 
 void FourBar::setSetpoint(int setpoint) {

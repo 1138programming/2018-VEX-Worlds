@@ -8,7 +8,7 @@ class Motor {
     int channel;
     int speed;
     Motor(int channel);
-    static Motor* motorInstances[];
+    static Motor* motorInstances[MAX_MOTORS];
   public:
     void setSpeed(int speed);
     int getSpeed();
