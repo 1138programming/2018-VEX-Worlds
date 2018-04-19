@@ -7,7 +7,6 @@ Collector::Collector() {
 }
 
 void Collector::move(int speed) {
-  speed = range(speed);
   collectorMotor->setSpeed(speed);
 }
 

@@ -16,8 +16,8 @@ class MobileGoal {
     void setSetpoint(int setpoint);
     void lock();
     int getSetpoint();
-    void resetIME();
-    int getIME();
+    void resetEncoder();
+    int getEncoder();
     static MobileGoal* getInstance();
 };
 

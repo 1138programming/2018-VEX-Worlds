@@ -115,9 +115,9 @@ void operatorControl() {
 
 		// Move mobile goal
 		if (moGoalFwd) {
-			moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
+			moGoal->setSetpoint(moGoal->getEncoder() + KMaxMotorSpeed);
 		} else if(moGoalBck) {
-			moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
+			moGoal->setSetpoint(moGoal->getEncoder() - KMaxMotorSpeed);
 		}
 		moGoal->loop();
 		//printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20

@@ -7,11 +7,10 @@ MobileGoal::MobileGoal() {
   mobileGoalMotor = Motor::getMotor(mobileGoalPort);
 
   controller = new PIDController(mobileGoalMotor, 0.5, 0.0, 0.05);
-  resetIME();
+  resetEncoder();
 }
 
 void MobileGoal::moveMobileGoal(int speed) {
-  speed = threshold(speed);
   mobileGoalMotor->setSpeed(speed);
 }
 
@@ -20,7 +19,7 @@ void MobileGoal::setSetpoint(int setpoint) {
 }
 
 void MobileGoal::lock() {
-  controller->setSetpoint(getIME());
+  controller->setSetpoint(getEncoder());
 }
 
 int MobileGoal::getSetpoint() {
@@ -28,16 +27,16 @@ int MobileGoal::getSetpoint() {
 }
 
 void MobileGoal::loop() {
-  controller->sensorValue(getIME());
+  controller->sensorValue(getEncoder());
   controller->loop();
 }
 
-void MobileGoal::resetIME() {
+void MobileGoal::resetEncoder() {
   imeReset(mobileGoalI2CAddress);
   controller->setSetpoint(0); // Reset setpoint too
 }
 
-int MobileGoal::getIME() {
+int MobileGoal::getEncoder() {
   int count;
   imeGet(mobileGoalI2CAddress, &count);
   return count;

@@ -6,7 +6,7 @@
 
 class IMESensor: public Sensor {
   private:
-    unsigned int i2cAddress;
+    unsigned int I2CAddress;
   public:
     int getSensorValue();
     IMESensor(int address);

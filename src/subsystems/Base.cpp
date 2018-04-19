@@ -29,8 +29,8 @@ Base::Base() {
  * @param right - speed of the right side
  */
 void Base::moveBase(int left, int right) {
-  left = threshold((int)(left * this->multiplier));
-  right = threshold((int)(right * this->multiplier));
+  left = (int)(left * this->multiplier);
+  right = (int)(right * this->multiplier);
 
   //Left motors
   leftFrontBaseMotor->setSpeed(left);

@@ -10,7 +10,6 @@ FourBar::FourBar() {
 }
 
 void FourBar::move(int speed) {
-  speed = threshold(speed);
   fourBarMotor->setSpeed(speed);
 }
 
