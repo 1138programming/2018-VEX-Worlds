@@ -4,6 +4,7 @@ Motor* Motor::motorInstances[MAX_MOTORS];
 
 Motor::Motor(int channel) {
   this->channel = channel;
+  this->multiplier = 1;
 }
 
 void Motor::setSpeed(int speed) {

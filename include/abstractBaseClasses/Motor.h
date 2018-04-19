@@ -7,7 +7,7 @@ class Motor {
   private:
     int channel;
     int speed;
-    int multiplier = 1;
+    int multiplier;
     Motor(int channel);
     static Motor* motorInstances[MAX_MOTORS];
   public:

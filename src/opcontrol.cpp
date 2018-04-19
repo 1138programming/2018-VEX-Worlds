@@ -32,7 +32,7 @@
 void operatorControl() {
 	//Define joystick input variables
 	int leftSide, rightSide, wristChannel, fourBarChannel; // Joysticks channel values
-	bool moGoalFwd, moGoalBck, stackCone, cllFwd, cllBck; // Button states
+	bool moGoalFwd, moGoalBck, stackCone, cllFwd, cllBck, slowMode; // Button states
 	bool stackingCone = false;
 
 	//Create instances of subsystems
@@ -76,6 +76,14 @@ void operatorControl() {
 		cllFwd = joystickGetDigital(2, 5, JOY_UP);
 		cllBck = joystickGetDigital(2, 5, JOY_DOWN);
 		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
+		slowMode = joystickGetDigital(1, 5, JOY_UP);
+
+		// Set to slow mode
+		if (slowMode) {
+			base->setMultiplier(0.333);
+		} else {
+			base->setMultiplier(1);
+		}
 
 		// Move base
 		base->moveBase(leftSide, rightSide);
@@ -90,6 +98,7 @@ void operatorControl() {
 			} else {
 				arm->wristLoop();
 			}
+			printf("Wrist encoder value: %d\n", arm->getWristPosition());
 
 			// Move four bar
 			deltaArm = threshold(fourBarChannel, 10);
@@ -116,7 +125,7 @@ void operatorControl() {
 		// Start collector
 		if (cllFwd && !stackingCone) {
 			arm->moveCollector(KMaxMotorSpeed); // Collector forward
-		} else if(cllBck) {
+		} else if(cllBck && !stackingCone) {
 			arm->moveCollector(-KMaxMotorSpeed); // Collector backward
 		} else {
 			arm->moveCollector(0); // Stop collector

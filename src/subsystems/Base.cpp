@@ -29,8 +29,8 @@ Base::Base() {
  * @param right - speed of the right side
  */
 void Base::moveBase(int left, int right) {
-  left = threshold(left);
-  right = threshold(right);
+  left = threshold((int)(left * this->multiplier));
+  right = threshold((int)(right * this->multiplier));
 
   //Left motors
   leftFrontBaseMotor->setSpeed(left);
@@ -76,6 +76,10 @@ int Base::getRightIME() {
 
 int Base::getUltrasonic() {
   return ultrasonicGet(ultrasonic); // In centimeters
+}
+
+void Base::setMultiplier(float multiplier) {
+  this->multiplier = multiplier;
 }
 
 Base* Base::getInstance() {

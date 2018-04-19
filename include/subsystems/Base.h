@@ -18,7 +18,9 @@ class Base {
     Motor* rightFrontBaseMotor;
     Motor* rightMiddleBaseMotor;
     Motor* rightRearBaseMotor;
-    
+
+    float multiplier;
+
     Base();
   public:
     void moveBase(int left, int right);
@@ -28,6 +30,7 @@ class Base {
     int getLeftIME();
     int getRightIME();
     int getUltrasonic();
+    void setMultiplier(float multiplier);
     static Base* getInstance();
 };
 

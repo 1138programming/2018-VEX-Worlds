@@ -84,9 +84,9 @@ void Arm::startStackingCone() {
 bool Arm::checkStackConeTask() {
   if (semaphoreTake(semaphore, 0)) {
     semaphoreGive(semaphore);
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 
