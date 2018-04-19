@@ -69,18 +69,25 @@ bool Arm::wristAtSetpoint() {
   return wrist->atSetpoint();
 }
 
-bool Arm::startStackingCone() {
+void Arm::startStackingCone() {
   if (semaphoreTake(semaphore, 0)) {
     printf("Creating stack cone task");
     task = taskCreate(stackConeTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-    return true;
   }
   if (task != NULL) {
     taskDelete(task);
     semaphoreGive(semaphore);
     task = NULL;
   }
-  return false;
+}
+
+bool Arm::checkStackConeTask() {
+  if (semaphoreTake(semaphore, 0)) {
+    semaphoreGive(semaphore);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Stack cone task
@@ -146,6 +153,13 @@ void Arm::stackConeTask(void * parameter) {
           clearStep();
         break;
     }
+
+    // Stop all motors
+    arm->moveWrist(0);
+    arm->moveFourBar(0);
+    arm->moveCollector(0);
+    arm->lockWrist();
+    arm->lockFourBar();
 
     delay(DELAY_TIME);
   }

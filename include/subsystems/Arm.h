@@ -33,7 +33,8 @@ class Arm {
     void wristLoop();
     bool fourBarAtSetpoint();
     bool wristAtSetpoint();
-    bool startStackingCone();
+    void startStackingCone();
+    bool checkStackConeTask();
     static Arm* getInstance();
 };
 

@@ -12,7 +12,7 @@
 //#include "subsystems/Arm.h"
 //#include "subsystems/MobileGoal.h"
 
-#define DEFAULT_TASK_TIME 20000
+#define DEFAULT_TASK_TIME 3500
 #define DELAY_TIME 10
 #define MAX_MOTORS 10
 

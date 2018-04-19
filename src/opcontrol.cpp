@@ -96,8 +96,8 @@ void operatorControl() {
 			if (deltaArm) {
 				//printf("Delta Arm is %d\n", deltaArm);
 				arm->moveFourBar(deltaArm);
-				//arm->lockFourBar();
-				arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
+				arm->lockFourBar();
+				//arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
 			} else {
 				//printf("Four Bar setpoint is %d\n", arm->getFourBarSetpoint());
 				arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
@@ -122,12 +122,11 @@ void operatorControl() {
 			arm->moveCollector(0); // Stop collector
 		}
 
-		// Start stacking a cone (stop if a cone is already being stacked)
+		// Start stacking a cone or stop if a cone is being stacked
 		if (stackCone) {
-			//printf("Stack cone button pressed\n");
-			stackingCone = arm->startStackingCone();
-			printf("FINISHED! %d\n", stackingCone);
+			arm->startStackingCone();
 		}
+		stackingCone = arm->checkStackConeTask();
 
 		delay(DELAY_TIME); // Small delay
 	}

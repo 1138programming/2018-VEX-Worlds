@@ -7,12 +7,16 @@ Motor::Motor(int channel) {
 }
 
 void Motor::setSpeed(int speed) {
-  this->speed = range(speed);
+  this->speed = range(speed) * this->multiplier;
   motorSet(this->channel, this->speed);
 }
 
 int Motor::getSpeed() {
   return this->speed;
+}
+
+void Motor::reverse() {
+  this->multiplier = -1;
 }
 
 void Motor::init() {

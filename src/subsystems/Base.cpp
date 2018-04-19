@@ -13,6 +13,12 @@ Base::Base() {
   rightMiddleBaseMotor = Motor::getMotor(rightMiddleBasePort);
   rightRearBaseMotor = Motor::getMotor(rightRearBasePort);
 
+  // Reverse motors
+  leftRearBaseMotor->reverse();
+  rightFrontBaseMotor->reverse();
+  rightMiddleBaseMotor->reverse();
+  rightRearBaseMotor->reverse();
+
   gyro = gyroInit(gyroPort, 196);
   ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
 }
