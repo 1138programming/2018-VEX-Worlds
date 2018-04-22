@@ -1,7 +1,7 @@
 #include "main.h"
 
 Arm* Arm::instance = 0;
-Semaphore Arm::semaphore = 0;
+Semaphore Arm::semaphore;
 
 Arm::Arm() {
    wrist = Wrist::getInstance();
@@ -126,7 +126,7 @@ void Arm::stackConeTask(void * parameter) {
         break;
       case 2: // Lower the four bar and start running the collector
         arm->setFourBarSetpoint(0);
-        arm->moveCollector(127);
+        arm->moveCollector(KMaxMotorSpeed);
         clearStep();
         break;
       case 3: // Loop the four bar and wrist until the four bar is at the setpoint
@@ -152,6 +152,33 @@ void Arm::stackConeTask(void * parameter) {
         if(arm->fourBarAtSetpoint())
           clearStep();
         break;
+      case 7:
+        arm->setWristSetpoint(0);
+        clearStep();
+        break;
+      case 8:
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(arm->wristAtSetpoint())
+          clearStep();
+        break;
+      case 9:
+        arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.125));
+        clearStep();
+        break;
+      case 10:
+        arm->fourBarLoop();
+        arm->wristLoop();
+        if(arm->fourBarAtSetpoint())
+          clearStep();
+        break;
+      case 11:
+        arm->fourBarLoop();
+        arm->wristLoop();
+        arm->moveCollector(-KMaxMotorSpeed);
+        if(millis() - timeStamp > 500)
+          clearStep();
+        break;
     }
 
     // Stop all motors
@@ -166,6 +193,7 @@ void Arm::stackConeTask(void * parameter) {
 
   // Gives up the semaphore, allowing this task to be called again later
   semaphoreGive(semaphore);
+  taskDelete(arm->task);
 }
 
 Arm* Arm::getInstance() {

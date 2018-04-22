@@ -64,79 +64,78 @@ void operatorControl() {
 		delay(DELAY_TIME);
 	}*/
 	while (true) {
-		// Set joysticks
-		leftSide = joystickGetAnalog(1, 3); // Left y-channel
-		rightSide = joystickGetAnalog(1, 2); // Right y-channel
-		wristChannel = joystickGetAnalog(2, 3); // Left y-channel
-		fourBarChannel = joystickGetAnalog(2, 2); // Right y-channel
-
-		// Set buttons
-		moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
-		moGoalBck = joystickGetDigital(1, 6, JOY_UP);
-		cllFwd = joystickGetDigital(2, 5, JOY_UP);
-		cllBck = joystickGetDigital(2, 5, JOY_DOWN);
-		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
-		slowMode = joystickGetDigital(1, 5, JOY_UP);
-
-		// Set to slow mode
-		if (slowMode) {
-			base->setMultiplier(0.333);
-		} else {
-			base->setMultiplier(1);
-		}
-
-		// Move base
-		base->moveBase(leftSide, rightSide);
-
-		if (!stackingCone) {
-			// Move the wrist
-			deltaWrist = threshold(wristChannel, 10);
-			if (deltaWrist) {
-				arm->moveWrist(deltaWrist);
-				arm->lockWrist();
-				//arm->setWristSetpoint(arm->getWristPosition());
-			} else {
-				arm->wristLoop();
-			}
-			printf("Wrist encoder value: %d\n", arm->getWristPosition());
-
-			// Move four bar
-			deltaArm = threshold(fourBarChannel, 10);
-			if (deltaArm) {
-				//printf("Delta Arm is %d\n", deltaArm);
-				arm->moveFourBar(deltaArm);
-				arm->lockFourBar();
-				//arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
-			} else {
-				//printf("Four Bar setpoint is %d\n", arm->getFourBarSetpoint());
-				arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
-			}
-		}
-
-		// Move mobile goal
-		if (moGoalFwd) {
-			moGoal->setSetpoint(moGoal->getEncoder() + KMaxMotorSpeed);
-		} else if(moGoalBck) {
-			moGoal->setSetpoint(moGoal->getEncoder() - KMaxMotorSpeed);
-		}
-		moGoal->loop();
-		//printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
-
-		// Start collector
-		if (cllFwd && !stackingCone) {
-			arm->moveCollector(KMaxMotorSpeed); // Collector forward
-		} else if(cllBck && !stackingCone) {
-			arm->moveCollector(-KMaxMotorSpeed); // Collector backward
-		} else {
-			arm->moveCollector(0); // Stop collector
-		}
-
-		// Start stacking a cone or stop if a cone is being stacked
-		if (stackCone) {
-			arm->startStackingCone();
-		}
-		stackingCone = arm->checkStackConeTask();
-
+		// // Set joysticks
+		// leftSide = joystickGetAnalog(1, 3); // Left y-channel
+		// rightSide = joystickGetAnalog(1, 2); // Right y-channel
+		// wristChannel = joystickGetAnalog(2, 3); // Left y-channel
+		// fourBarChannel = joystickGetAnalog(2, 2); // Right y-channel
+		//
+		// // Set buttons
+		// moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
+		// moGoalBck = joystickGetDigital(1, 6, JOY_UP);
+		// cllFwd = joystickGetDigital(2, 5, JOY_UP);
+		// cllBck = joystickGetDigital(2, 5, JOY_DOWN);
+		// stackCone = joystickGetDigital(2, 8, JOY_LEFT);
+		// slowMode = joystickGetDigital(1, 5, JOY_UP);
+		//
+		// // Set to slow mode
+		// if (slowMode) {
+		// 	base->setMultiplier(0.333);
+		// } else {
+		// 	base->setMultiplier(1);
+		// }
+		//
+		// // Move base
+		// base->moveBase(leftSide, rightSide);
+		//
+		// if (!stackingCone) {
+		// 	// Move the wrist
+		// 	deltaWrist = threshold(wristChannel, 10);
+		// 	if (deltaWrist) {
+		// 		arm->moveWrist(deltaWrist);
+		// 		arm->lockWrist();
+		// 		//arm->setWristSetpoint(arm->getWristPosition());
+		// 	} else {
+		// 		arm->wristLoop();
+		// 	}
+		// 	printf("Wrist encoder value: %d\n", arm->getWristPosition());
+		//
+		// 	// Move four bar
+		// 	deltaArm = threshold(fourBarChannel, 10);
+		// 	if (deltaArm) {
+		// 		//printf("Delta Arm is %d\n", deltaArm);
+		// 		arm->moveFourBar(deltaArm);
+		// 		arm->lockFourBar();
+		// 		//arm->setFourBarSetpoint(arm->getFourBarPosition()); // Must be here otherwise will drift
+		// 	} else {
+		// 		//printf("Four Bar setpoint is %d\n", arm->getFourBarSetpoint());
+		// 		arm->fourBarLoop(); // Simply run the PID. Do *not* update the setpoint while this is running
+		// 	}
+		// }
+		//
+		// // Move mobile goal
+		// if (moGoalFwd) {
+		// 	moGoal->setSetpoint(moGoal->getEncoder() + KMaxMotorSpeed);
+		// } else if(moGoalBck) {
+		// 	moGoal->setSetpoint(moGoal->getEncoder() - KMaxMotorSpeed);
+		// }
+		// moGoal->loop();
+		// //printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
+		//
+		// // Start collector
+		// if (cllFwd && !stackingCone) {
+		// 	arm->moveCollector(KMaxMotorSpeed); // Collector forward
+		// } else if(cllBck && !stackingCone) {
+		// 	arm->moveCollector(-KMaxMotorSpeed); // Collector backward
+		// } else {
+		// 	arm->moveCollector(0); // Stop collector
+		// }
+		//
+		// // Start stacking a cone or stop if a cone is being stackedss
+		// if (stackCone) {
+		// 	arm->startStackingCone();
+		// }
+		// stackingCone = arm->checkStackConeTask();
 		delay(DELAY_TIME); // Small delay
 	}
 }
