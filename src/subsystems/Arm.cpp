@@ -141,7 +141,7 @@ void Arm::stackConeTask(void * parameter) {
         if(millis() - timeStamp > 500)
           clearStep();
         break;
-      case 5: // Lift the four bar/* and stop the collector*/s
+      case 5: // Lift the four bar
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
         //arm->moveCollector(0);
         clearStep();
@@ -152,27 +152,27 @@ void Arm::stackConeTask(void * parameter) {
         if(arm->fourBarAtSetpoint())
           clearStep();
         break;
-      case 7:
+      case 7: // Return wrist to starting position
         arm->setWristSetpoint(0);
         clearStep();
         break;
-      case 8:
+      case 8: // Loop four bar and wrist until wrist reaches the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->wristAtSetpoint())
           clearStep();
         break;
-      case 9:
+      case 9: // Lower four bar to halfway up
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.125));
         clearStep();
         break;
-      case 10:
+      case 10: // Loop four bar and wrist until four bar reaches the setpoint
         arm->fourBarLoop();
         arm->wristLoop();
         if(arm->fourBarAtSetpoint())
           clearStep();
         break;
-      case 11:
+      case 11: // Run the collector backwards for half a second
         arm->fourBarLoop();
         arm->wristLoop();
         arm->moveCollector(-KMaxMotorSpeed);
