@@ -4,8 +4,9 @@ Wrist* Wrist::instance = 0;
 
 Wrist::Wrist() {
   wristMotor = Motor::getMotor(wristPort);
-  wristEncoder = encoderInit(wristEncoderTopPort, wristEncoderBottomPort, false);
-  resetEncoder();
+  //wristEncoder = encoderInit(wristEncoderTopPort, wristEncoderBottomPort, false);
+  //resetEncoder();
+  imeReset(wristIME);
   controller = new PIDController(wristMotor, 1.0, 0, 0);
 }
 
@@ -36,11 +37,15 @@ bool Wrist::atSetpoint() {
 }
 
 int Wrist::getEncoderValue() {
-  return encoderGet(wristEncoder);
+  //return encoderGet(wristEncoder);
+  int count;
+  imeGet(wristIME, &count);
+  return count;
 }
 
 void Wrist::resetEncoder() {
-  encoderReset(wristEncoder);
+  //encoderReset(wristEncoder);
+  imeReset(wristIME);
 }
 
 Wrist* Wrist::getInstance() {

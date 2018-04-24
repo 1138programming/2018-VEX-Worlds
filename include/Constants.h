@@ -43,6 +43,7 @@ const int fourBarPort = 7;
 const unsigned char mobileGoalI2CAddress = 0;
 const unsigned char baseLeftI2CAddress = 1;
 const unsigned char baseRightI2CAddress = 2;
+const unsigned char wristIME = 3;
 
 
 //Motor and encoder constants
@@ -70,5 +71,6 @@ const int wristEncoderBottomPort = 8;
 
 // Other constants
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct
+const int speedIMEMaxRotations = 392;
 
 #endif

@@ -111,11 +111,11 @@ void Arm::stackConeTask(void * parameter) {
   timeStamp = millis();
 
   //Loop which will run until the steps are finished or after 20 seconds have passed as a precaution
-  while(step < totalSteps && millis() < startTime + DEFAULT_TASK_TIME) {
+  while(step < totalSteps && millis() < (startTime + DEFAULT_TASK_TIME)) {
     switch(step) {
       case 0: // Lift the four bar and make the wrist point downward
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
-        arm->setWristSetpoint((int)(encoderTicks * 0.75));
+        arm->setWristSetpoint((int)(speedIMEMaxRotations * 0.75));
         clearStep();
         break;
       case 1: // Loop the four bar and wrist until they are at the setpoint
@@ -126,7 +126,6 @@ void Arm::stackConeTask(void * parameter) {
         break;
       case 2: // Lower the four bar and start running the collector
         arm->setFourBarSetpoint(0);
-        arm->moveCollector(127);
         clearStep();
         break;
       case 3: // Loop the four bar and wrist until the four bar is at the setpoint
@@ -143,7 +142,6 @@ void Arm::stackConeTask(void * parameter) {
         break;
       case 5: // Lift the four bar and stop the collector
         arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
-        arm->moveCollector(0);
         clearStep();
         break;
       case 6: // Loop the four bar and wrist until the four bar is at the setpoint

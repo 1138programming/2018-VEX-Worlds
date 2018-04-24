@@ -27,4 +27,14 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
+  Arm* arm = Arm::getInstance();
+  MobileGoal* mogo = MobileGoal::getInstance();
+  arm->moveFourBar(127);
+  delay(850);
+  arm->moveFourBar(0);
+  mogo->moveMobileGoal(-127);
+  delay(150);
+  mogo->moveMobileGoal(0);
+  mogo->resetIME();
+  arm->lockFourBar();
 }

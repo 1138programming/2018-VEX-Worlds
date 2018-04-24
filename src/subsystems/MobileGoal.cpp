@@ -43,6 +43,10 @@ int MobileGoal::getIME() {
   return count;
 }
 
+bool MobileGoal::atSetpoint() {
+  return controller->atSetpoint();
+}
+
 MobileGoal* MobileGoal::getInstance() {
   if (instance == 0) {
     instance = new MobileGoal();
