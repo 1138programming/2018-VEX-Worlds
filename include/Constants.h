@@ -72,5 +72,9 @@ const int wristEncoderBottomPort = 8;
 // Other constants
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct
 const int speedIMEMaxRotations = 392;
+const int wristRotationTicks = speedIMEMaxRotations * 5; // Wrist is on a 5 to 1 rotation
+
+// Global things that we need
+static int numImes = 0;
 
 #endif

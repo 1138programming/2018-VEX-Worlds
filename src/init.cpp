@@ -11,6 +11,7 @@
  */
 
 #include "main.h"
+int imeCount;
 
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
@@ -40,7 +41,8 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-  printf("%d IMEs Initialized.\n", imeInitializeAll());
+  imeCount = imeInitializeAll();
+  printf("%d IMEs Initialized.\n", imeCount);
   setTeamName("1138");
 
   Motor::init();

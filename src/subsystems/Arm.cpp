@@ -1,7 +1,6 @@
 #include "main.h"
 
 Arm* Arm::instance = 0;
-Semaphore Arm::semaphore = 0;
 
 Arm::Arm() {
    wrist = Wrist::getInstance();
@@ -70,24 +69,18 @@ bool Arm::wristAtSetpoint() {
 }
 
 void Arm::startStackingCone() {
-  if (semaphoreTake(semaphore, 0)) {
-    printf("Creating stack cone task");
+  if (checkStackConeTask()) {
+    printf("Deleting task\n");
+    taskDelete(task);
+  } else {
+    printf("Creating new task\n");
     task = taskCreate(stackConeTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
   }
-  if (task != NULL) {
-    taskDelete(task);
-    semaphoreGive(semaphore);
-    task = NULL;
-  }
+  delay(DELAY_TIME); // Allow a.) The idle task to free memory, or 2.) The new task to run
 }
 
 bool Arm::checkStackConeTask() {
-  if (semaphoreTake(semaphore, 0)) {
-    semaphoreGive(semaphore);
-    return false;
-  } else {
-    return true;
-  }
+  return task && taskGetState(task) == TASK_RUNNING || taskGetState(task) == TASK_SLEEPING;
 }
 
 // Stack cone task
@@ -100,77 +93,43 @@ void Arm::stackConeTask(void * parameter) {
   int step = 0; // The step the task is on
   int totalSteps = 7; // Total number of steps
 
-  // Update timeStamp and increment step. This is called whenver the condition inside the current case has been met and the robot is ready to move on to the next step
-  auto clearStep = [&] {
-    timeStamp = millis();
-    step++;
-  };
-
   // Initialize startTime and timeStamp
   startTime = millis();
-  timeStamp = millis();
 
-  // This loop will run until the steps are finished or after the DEFAULT_TASK_TIME (3.5 seconds) has passed in case the task isn't working
-  while(step < totalSteps && millis() < (startTime + DEFAULT_TASK_TIME)) {
-    switch(step) {
-      case 0: // Step 0: Lift the four bar and make the wrist point downward
-        arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
-        arm->setWristSetpoint((int)(speedIMEMaxRotations * 0.75));
-        clearStep(); // Automatically clears step because setting the four bar and wrist setpoints only needs to happen once
-        break;
-      case 1: // Step 1: Loop the four bar and wrist until they are at the setpoint
-        arm->fourBarLoop();
-        arm->wristLoop();
-        if(arm->fourBarAtSetpoint() && arm->wristAtSetpoint())
-          clearStep();  // Clears the step once the four bar and wrist are at their setpoint
-        break;
-      case 2: // Lower the four bar and start running the collector
-        arm->setFourBarSetpoint(0);
-        clearStep(); // Automatically clears step because setting the four bar setpoint only needs to happen once
-        break;
-      case 3: // Loop the four bar and wrist until the four bar is at the setpoint
-        arm->fourBarLoop();
-        arm->wristLoop();
-        if(arm->fourBarAtSetpoint())
-          clearStep();  // Clears the step once the four bar is at the setpoint
-        break;
-      case 4: // Wait half a second for the collector to pick up the cone
-        arm->fourBarLoop();
-        arm->wristLoop();
-        if(millis() - timeStamp > 500)
-          clearStep();  // Clears the step once 0.5 seconds have passed
-        break;
-      case 5: // Lift the four bar and stop the collector
-        arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
-        clearStep(); // Automatically clears step because setting the four bar setpoint only needs to happen once
-        break;
-      case 6: // Loop the four bar and wrist until the four bar is at the setpoint
-        arm->fourBarLoop();
-        arm->wristLoop();
-        if(arm->fourBarAtSetpoint())
-          clearStep(); // Clears the step once the four bar is at the setpoint
-        break;
-    }
-
-    delay(DELAY_TIME);
+  // Move arm and wrist upwards to grab a cone
+  arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
+  arm->setWristSetpoint((int)(wristRotationTicks * -0.40));
+  while (!arm->fourBarAtSetpoint() && !arm->wristAtSetpoint() && millis() < (startTime + DEFAULT_TASK_TIME)) {
+    arm->fourBarLoop();
+    arm->wristLoop();
+  }
+  arm->setFourBarSetpoint(0); // Move the arm down to
+  while (!arm->fourBarAtSetpoint() && millis() < (startTime + DEFAULT_TASK_TIME)) {
+    arm->fourBarLoop();
+    arm->wristLoop();
+  }
+  arm->setFourBarSetpoint((int)(fourBarEncoderTicks * 0.25));
+  arm->setWristSetpoint((int)(wristRotationTicks * 0.25));
+  while (!arm->fourBarAtSetpoint() && !arm->wristAtSetpoint() && millis() < (startTime + DEFAULT_TASK_TIME)) {
+    arm->fourBarLoop();
+    arm->wristLoop();
+  }
+  arm->setFourBarSetpoint(0);
+  arm->setWristSetpoint((int)(wristRotationTicks));
+  while (!arm->fourBarAtSetpoint() && !arm->wristAtSetpoint() && millis() < (startTime + DEFAULT_TASK_TIME)) {
+    arm->fourBarLoop();
+    arm->wristLoop();
   }
   // The loop has ended. All the steps have run, or the robot took to long and the DEFAULT_TASK_TIME elapsed
-  
+
   // Stop all motors
-  arm->moveWrist(0);
-  arm->moveFourBar(0);
-  arm->moveCollector(0);
   arm->lockWrist();
   arm->lockFourBar();
-
-  // Gives up the semaphore, allowing this task to be called again later
-  semaphoreGive(semaphore);
 }
 
 Arm* Arm::getInstance() {
   if (instance == 0) {
     instance = new Arm();
-    semaphore = semaphoreCreate();
   }
 
   return instance;

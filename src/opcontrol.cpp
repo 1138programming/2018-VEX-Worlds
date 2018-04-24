@@ -11,6 +11,7 @@
  */
 
 #include "main.h"
+extern int imeCount;
 
 /*
  * Runs the user operator control code. This function will be started in its own task with the
@@ -76,6 +77,10 @@ void operatorControl() {
 		cllFwd = joystickGetDigital(2, 5, JOY_UP);
 		cllBck = joystickGetDigital(2, 5, JOY_DOWN);
 		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
+		if (stackCone) {
+			// Don't do the action multiple times and leave us in an undefined state
+			while (joystickGetDigital(2, 8, JOY_LEFT));
+		}
 		slowMode = joystickGetDigital(1, 5, JOY_UP);
 
 		// Set to slow mode
@@ -89,17 +94,21 @@ void operatorControl() {
 		base->moveBase(leftSide, rightSide);
 
 		if (!stackingCone) {
-			// Move the wrist
+			// Move the wrist - New 4/23: Added code to check if IME is present or not. If it isn't fall back to non-PID code
 			deltaWrist = threshold(wristChannel, 10);
-			if (deltaWrist) {
+			if (imeCount < 4) {
+				printf("Less that 4 imes? %d\n", imeCount);
 				arm->moveWrist(deltaWrist);
-				arm->lockWrist();
-				//arm->setWristSetpoint(arm->getWristPosition());
 			} else {
-				arm->wristLoop();
+				if (deltaWrist) {
+					arm->moveWrist(deltaWrist);
+					arm->lockWrist();
+					//arm->setWristSetpoint(arm->getWristPosition());
+				} else {
+					arm->wristLoop();
+				}
+				//printf("Wrist encoder value: %d\n", arm->getWristPosition());
 			}
-			printf("Wrist encoder value: %d\n", arm->getWristPosition());
-
 			// Move four bar
 			deltaArm = threshold(fourBarChannel, 10);
 			if (deltaArm) {

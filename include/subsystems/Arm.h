@@ -13,7 +13,6 @@ class Arm {
     FourBar* fourBar;
     Collector* collector;
     TaskHandle task;
-    static Semaphore semaphore;
     static void stackConeTask(void * parameter);
     void clearStep();
     Arm();
