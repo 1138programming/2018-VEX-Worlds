@@ -4,10 +4,10 @@
  * This file should contain the user autonomous() function and any functions related to it.
  *
  * Any copyright is dedicated to the Public Domain.
- * http://creativecommons.org/publicdomain/zero/1.0/
+ * http:// creativecommons.org/publicdomain/zero/1.0/
  *
- * PROS contains FreeRTOS (http://www.freertos.org) whose source code may be
- * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
+ * PROS contains FreeRTOS (http:// www.freertos.org) whose source code may be
+ * obtained from http:// sourceforge.net/projects/freertos/files/ or on request.
  */
 
 #include "main.h"
@@ -27,14 +27,60 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
+  int armSetpoint = 490; // TODO find real setpoint
+  int leftBaseSetpoint = 300; // TODO find real setpoint
+  int rightBaseSetpoint = -300; // TODO find reat setpoint
+  int wristSetpoint = -540; // TODO find real setpoint
+  int mogoSpeed = 80; // Speed the mobile goal will move at
+
+  printf("ENABLING AUTONOMOUS!");
   Arm* arm = Arm::getInstance();
   MobileGoal* mogo = MobileGoal::getInstance();
-  arm->moveFourBar(127);
-  delay(850);
-  arm->moveFourBar(0);
-  mogo->moveMobileGoal(-127);
-  delay(150);
+  Base* driveBase = Base::getInstance();
+
+  driveBase->resetEncoders();
+
+  // Move arm and base until they both reach their goals simultaneously
+  arm->setFourBarSetpoint(armSetpoint);
+  driveBase->setSetpoint(leftBaseSetpoint, rightBaseSetpoint);
+  while(!arm->fourBarAtSetpoint() || !driveBase->atSetpoint())
+  {
+    arm->fourBarLoop();
+    driveBase->loop();
+  }
+
+  // Move mobile goal back based on time, then reset the IME
+  // Time estimate for going back: 500 ms
+  mogo->moveMobileGoal(-mogoSpeed);
+  delay(500);
   mogo->moveMobileGoal(0);
   mogo->resetIME();
-  arm->lockFourBar();
+
+  // Turn base towards mobile goal (probably)
+
+  // Move wrist into position to score
+  arm->setWristSetpoint(wristSetpoint);
+  while(!arm->wristAtSetpoint())
+  {
+    arm->wristLoop();
+  }
+
+  // Move arm down in order to finish scoring
+  arm->setFourBarSetpoint(0);
+  while(!arm->fourBarAtSetpoint())
+  {
+    arm->fourBarLoop();
+    driveBase->loop();
+  }
+
+
+  // This is old stuff, IDK if we exaclty need it anymore it's kinda like a backup
+  //  arm->moveFourBar(127);
+  //  delay(850);
+  //  arm->moveFourBar(0);
+  //  mogo->moveMobileGoal(-127);
+  //  delay(150);
+  //  mogo->moveMobileGoal(0);
+  //  mogo->resetIME();
+  //  arm->lockFourBar();
 }

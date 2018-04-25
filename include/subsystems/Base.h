@@ -21,9 +21,16 @@ class Base {
 
     float multiplier;
 
+    int leftBaseSetpoint = 0;
+    int rightBaseSetpoint = 0;
+
     Base();
   public:
     void moveBase(int left, int right);
+    void setSetpoint(int leftSetpoint, int rightSetpoint);
+    void loop();
+    bool atSetpoint();
+    bool turnDegrees(int degrees, float logValue = 180, int direction = 0);
     void resetGyro();
     int getGyro();
     void resetEncoders();

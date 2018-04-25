@@ -83,6 +83,11 @@ void operatorControl() {
 		}
 		slowMode = joystickGetDigital(1, 5, JOY_UP);
 
+		// Print all sensor values, used for development
+		if (joystickGetDigital(1, 8, JOY_UP)) {
+			printf("IME 1 value: %d IME 2 value: %d IME 3 value: %d Arm value: %d Wrist value: %d\n", moGoal->getIME(), base->getRightIME(), base->getLeftIME(), arm->getFourBarPosition(), arm->getWristPosition());
+		}
+
 		// Set to slow mode
 		if (slowMode) {
 			base->setMultiplier(0.333);

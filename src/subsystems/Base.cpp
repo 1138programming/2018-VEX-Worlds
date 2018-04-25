@@ -49,6 +49,49 @@ void Base::moveBase(int left, int right) {
   //motorSet(rightRearBase, right);
 }
 
+void Base::setSetpoint(int leftSetpoint, int rightSetpoint) {
+  resetEncoders();
+  this->leftBaseSetpoint = leftSetpoint;
+  this->rightBaseSetpoint = rightSetpoint;
+}
+
+void Base::loop() {
+  float leftkP = 0.5;
+  float rightkP = 0.5;
+  moveBase(
+    (int)(leftkP * (leftBaseSetpoint - getLeftIME())),
+    (int)(rightkP * (rightBaseSetpoint - getRightIME()))
+  );
+  printf("Left IME is %d\n", getLeftIME());
+  printf("Right IME is %d\n", getRightIME());
+}
+
+bool Base::atSetpoint() {
+  return (leftBaseSetpoint - getLeftIME() <= 10) && (rightBaseSetpoint - getRightIME() <= 10);
+}
+
+bool Base::turnDegrees(int degrees, float logValue, int direction) {
+  // int gyro = getGyro();
+  // float rightAngle = degrees > gyro ? degrees - gyro : (360 - gyro) + degrees;
+  // float leftAngle = degrees > gyro ? (360 - gyro) + gyro : gyro - degrees;
+  //
+  // float speed = floor((KMaxMotorSpeed * log(abs(gyro - degrees) + 1)) / (log(logValue + 1)));
+  //
+  // if (abs(direction) != 1) {
+  //   if (rightAngle < leftAngle) {
+  //     moveBase(speed, -speed);
+  //   } else {
+  //     moveBase(-speed, speed);
+  //   }
+  // } else if (direction == 1) {
+  //   moveBase(speed, -speed);
+  // } else if (direction == -1) {
+  //   moveBase(-speed, speed);
+  // }
+  // return threshold(speed, 15) < 15;
+  return false;
+}
+
 void Base::resetGyro() {
   gyroReset(gyro);
 }
