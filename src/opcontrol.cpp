@@ -31,6 +31,28 @@ extern int imeCount;
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
+	/*printf("Beginning op controler\n");
+
+	Motor* port2 = Motor::getMotor(2);
+	Motor* port3 = Motor::getMotor(3);
+
+	port2->addFollower(port3);
+
+	PIDController* controller = new PIDController(port2, 0.1, 0.0, 0.01);
+
+	Encoder encoder = encoderInit(12, 11, true);
+
+	controller->setSetpoint(3600);
+
+	while (true) {
+		//printf("Motor port is %d\n", port2->getChannel());
+		int count = encoderGet(encoder);
+		//printf("IME value is %d\n", count);
+		controller->sensorValue(count);
+		controller->loop();
+		delay(DELAY_TIME);
+	}*/
+
 	//Define joystick input variables
 	int leftSide, rightSide, wristChannel, fourBarChannel; // Joysticks channel values
 	bool moGoalFwd, moGoalBck, stackCone, cllFwd, cllBck, slowMode = false; // Button states
@@ -86,21 +108,15 @@ void operatorControl() {
 		}
 	}*/
 
-	/*Motor* port2 = Motor::getMotor(2);
-	Motor* port3 = Motor::getMotor(3);
-	Motor* port4 = Motor::getMotor(4);
+  /*while (true) {
+    arm->moveWrist(KMaxMotorSpeed);
+    printf("Wrist IME is %d\n", arm->getWristPosition());
+  }*/
 
-	port2->addFollower(port3);
-	port2->addFollower(port4);
-
-	while (true) {
-		port2->setSpeed(127);
-		delay(DELAY_TIME);
-	}*/
-
-	printf("Starting auton\n");
-	if (true)
-		autonomous();
+  // if (true) {
+	// 	printf("Starting auton\n");
+	// 	autonomous();
+	// }
 
 	while (true) {
 		// Set joysticks
@@ -136,18 +152,21 @@ void operatorControl() {
 
 		if (!stackingCone) {
 			// Move the wrist - New 4/23: Added code to check if IME is present or not. If it isn't fall back to non-PID code
-			deltaWrist = threshold(wristChannel, 10);
+			deltaWrist = threshold(wristChannel, 20);
 			if (imeCount < 4) {
 				//printf("Less that 4 imes? %d\n", imeCount);
 				arm->moveWrist(deltaWrist);
 			} else {
-				if (deltaWrist) {
+				/*if (deltaWrist) {
 					arm->moveWrist(deltaWrist);
 					arm->lockWrist();
 					//arm->setWristSetpoint(arm->getWristPosition());
 				} else {
+					//arm->moveWrist(0);
 					arm->wristLoop();
 				}
+				printf("Delta wrist is %d, wrist IME is %d and wrist setpoint is %d\n", deltaWrist, arm->getWristPosition(), arm->getWristSetpoint());*/
+				arm->moveWrist(deltaWrist);
 				//printf("Wrist encoder value: %d\n", arm->getWristPosition());
 			}
 			// Move four bar

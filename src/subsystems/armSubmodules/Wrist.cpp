@@ -11,7 +11,6 @@ Wrist::Wrist() {
 }
 
 void Wrist::move(int speed) {
-  speed = threshold(speed);
   wristMotor->setSpeed(speed);
 }
 
@@ -40,7 +39,7 @@ int Wrist::getEncoderValue() {
   //return encoderGet(wristEncoder);
   int count;
   imeGet(wristIME, &count);
-  return count;
+  return -count;
 }
 
 void Wrist::resetEncoder() {

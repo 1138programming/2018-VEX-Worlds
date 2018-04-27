@@ -32,37 +32,76 @@ void autonomous() {
   MobileGoal* mogo = MobileGoal::getInstance();
   Base* base = Base::getInstance();
 
+  int startTime;
+
+  base->resetEncoders();
+
   // Auton
-  /*arm->moveFourBar(127);
-  delay(550);
-  arm->moveFourBar(0);*/
-  arm->setFourBarSetpoint((int)(fourBarRotationTicks * 1.4));
-  //base->setReference();
+  arm->setFourBarSetpoint((int)(fourBarRotationTicks * 1.38));
+  while (!arm->fourBarAtSetpoint()) {
+    arm->wristLoop();
+    arm->fourBarLoop();
+    delay(DELAY_TIME);
+  }
+
   base->setLeftSetpoint(base->getLeftSetpoint() + 360);
   base->setRightSetpoint(base->getRightSetpoint() + 360);
-  while (!arm->fourBarAtSetpoint()) {
-    arm->fourBarLoop();
-    //base->moveBaseTo(360);
+  while (!base->leftAtSetpoint() || !base->rightAtSetpoint()) {
+    arm->wristLoop();
     base->loopLeft();
     base->loopRight();
-    //printf("Four bar setpoint is %d and four bar position is %d\n", arm->getFourBarSetpoint(), arm->getFourBarPosition());
-    printf("Base imes are %d and %d\n", base->getLeftIME(), base->getRightIME());
+    //printf("Left IME is %d and right IME is %d\n", base->getLeftIME(), base->getRightIME());
+    delay(DELAY_TIME);
+  }
+  base->lockLeft();
+  base->lockRight();
+
+  arm->setWristSetpoint((int)(wristRotationTicks * -0.25));
+  while (!arm->wristAtSetpoint()) {
+    arm->wristLoop();
+    base->loopLeft();
+    base->loopRight();
+    printf("Wrist IME is %d and wrist setpoint is %d\n", arm->getWristPosition(), arm->getWristSetpoint());
+    delay(DELAY_TIME);
+  }
+  arm->lockWrist();
+
+  /*startTime = millis();
+  while (millis() - startTime > 2000) {
+    arm->moveCollector(-127);
+    arm->wristLoop();
+    base->loopLeft();
+    base->loopRight();
     delay(DELAY_TIME);
   }
 
-  while(!base->leftAtSetpoint() || !base->rightAtSetpoint()) {
+  arm->setWristSetpoint(0);
+  while (!arm->wristAtSetpoint()) {
+    arm->wristLoop();
+    base->loopLeft();
+    base->loopRight();
     delay(DELAY_TIME);
   }
+  arm->lockWrist();
+  arm->moveCollector(0);*/
 
-  int startTime = millis();
-  while(millis() - startTime < 500) {
-    arm->moveCollector(-KMaxMotorSpeed);
-  }
+  /*arm->moveWrist(-100);
+  delay(800);
+  arm->moveWrist(0);
+
+  arm->moveCollector(-127);
+  delay(1000);
+
+  arm->moveWrist(100);
+  delay(1000);
+  arm->moveWrist(0);
+
+  arm->moveCollector(0);*/
 
   // Get robot ready for teleop
-  mogo->moveMobileGoal(127);
+  /*mogo->moveMobileGoal(127);
   delay(130);
   mogo->moveMobileGoal(0);
   mogo->resetIME();
-  arm->lockFourBar();
+  arm->lockFourBar();*/
 }

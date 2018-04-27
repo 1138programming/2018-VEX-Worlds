@@ -15,7 +15,7 @@
 #define DEFAULT_TASK_TIME 10000
 #define DELAY_TIME 10
 #define MAX_MOTORS 10
-#define MAX_FOLLOWERS 2
+#define MAX_FOLLOWERS 3
 
 // Motor ports
 // Left base motor ports
@@ -41,8 +41,8 @@ const int fourBarPort = 9;
 
 // IME Addresses
 const unsigned char mobileGoalI2CAddress = 0;
-const unsigned char baseLeftI2CAddress = 1;
-const unsigned char baseRightI2CAddress = 2;
+const unsigned char baseRightI2CAddress = 1;
+const unsigned char baseLeftI2CAddress = 2;
 const unsigned char wristIME = 3;
 
 

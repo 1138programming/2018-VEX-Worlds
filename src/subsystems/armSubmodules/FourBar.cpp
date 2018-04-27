@@ -9,7 +9,7 @@ FourBar::FourBar() {
   resetEncoder();
 
   controller = new PIDController(fourBarMotor, 0.9, 0.01, 0.0);
-  controller->setThreshold(15);
+  controller->setThreshold(20);
   //topController = new PIDController(bottomFourBarMotor, 0.7, 0.0, 0.0);
 }
 

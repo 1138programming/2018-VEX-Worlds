@@ -17,7 +17,7 @@ Base::Base() {
   leftRearBaseMotor->reverse();
   rightFrontBaseMotor->reverse();
   rightMiddleBaseMotor->reverse();
-  //rightRearBaseMotor->reverse();
+  rightRearBaseMotor->reverse();
 
   // Set follower motorss
   leftFrontBaseMotor->addFollower(leftMiddleBaseMotor);
@@ -25,8 +25,11 @@ Base::Base() {
   rightFrontBaseMotor->addFollower(rightMiddleBaseMotor);
   rightFrontBaseMotor->addFollower(rightRearBaseMotor);
 
-  leftController = new PIDController(leftFrontBaseMotor, 0.5, 0.0, 0.0);
-  rightController = new PIDController(rightFrontBaseMotor, 0.5, 0.0, 0.0);
+  leftController = new PIDController(leftFrontBaseMotor, 0.6, 0.0, 0.0);
+  rightController = new PIDController(rightFrontBaseMotor, 0.6, 0.0, 0.0);
+
+  leftController->setThreshold(35);
+  rightController->setThreshold(35);
 
   gyro = gyroInit(gyroPort, 196);
   ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
@@ -108,7 +111,8 @@ void Base::lockRight() {
 }
 
 void Base::loopLeft() {
-  leftController->sensorValue(getLeftIME());
+  printf("Left IME is %d\n", this->getLeftIME());
+  leftController->sensorValue(this->getLeftIME());
   leftController->loop();
 }
 
@@ -149,13 +153,13 @@ void Base::resetEncoders() {
 int Base::getLeftIME() {
   int count;
   imeGet(baseLeftI2CAddress, &count);
-  return count;
+  return -count;
 }
 
 int Base::getRightIME() {
   int count;
   imeGet(baseRightI2CAddress, &count);
-  return -count;
+  return count;
 }
 
 int Base::getUltrasonic() {
