@@ -98,6 +98,10 @@ void operatorControl() {
 		delay(DELAY_TIME);
 	}*/
 
+	printf("Starting auton\n");
+	if (true)
+		autonomous();
+
 	while (true) {
 		// Set joysticks
 		leftSide = joystickGetAnalog(1, 3); // Left y-channel
@@ -160,16 +164,19 @@ void operatorControl() {
 		}
 
 		// Move mobile goal
+		//printf("Mobile goal position is %d\n", moGoal->getPosition());
+		//printf("Mobile goal forward button %d and mobile goal backward button %d\n", moGoalFwd, moGoalBck);
+		//printf("Mobile setpoint is %d\n", moGoal->getSetpoint());
 		if (moGoalFwd) {
-			//moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
-			moGoal->moveMobileGoal(KMaxMotorSpeed);
+			moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
+			//moGoal->moveMobileGoal(KMaxMotorSpeed);
 		} else if(moGoalBck) {
-			//moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
-			moGoal->moveMobileGoal(-KMaxMotorSpeed);
+			moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
+			//moGoal->moveMobileGoal(-KMaxMotorSpeed);
 		} else {
-			moGoal->moveMobileGoal(0);
+			moGoal->lock();
 		}
-		//moGoal->loop();
+		moGoal->loop();
 		//printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
 
 		// Start collector

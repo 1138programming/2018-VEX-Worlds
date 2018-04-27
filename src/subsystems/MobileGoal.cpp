@@ -17,7 +17,7 @@ void MobileGoal::moveMobileGoal(int speed) {
 }
 
 void MobileGoal::setSetpoint(int setpoint) {
-  //controller->setSetpoint(range(setpoint, -20, 1770));
+  //controller->setSetpoint(confineToRange(setpoint, -20, 1056));
   controller->setSetpoint(setpoint);
   //rightController->setSetpoint(setpoint);
 }
@@ -52,6 +52,10 @@ int MobileGoal::getIME() {
 
 bool MobileGoal::atSetpoint() {
   return controller->atSetpoint();
+}
+
+int MobileGoal::getPosition() {
+  return getIME();
 }
 
 MobileGoal* MobileGoal::getInstance() {

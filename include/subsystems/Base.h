@@ -19,6 +19,9 @@ class Base {
     Motor* rightMiddleBaseMotor;
     Motor* rightRearBaseMotor;
 
+    PIDController* leftController;
+    PIDController* rightController;
+
     float multiplier;
 
     int encoderReference;
@@ -28,6 +31,16 @@ class Base {
     void moveBase(int left, int right);
     bool moveBaseTo(int target, int logValue = 750, int threshold = 10);
     bool turnBaseTo(int target, int logValue = 180, int threshold = 10, int direction = 0);
+    void setLeftSetpoint(int setpoint);
+    void setRightSetpoint(int setpoint);
+    void lockLeft();
+    void lockRight();
+    void loopRight();
+    void loopLeft();
+    int getLeftSetpoint();
+    int getRightSetpoint();
+    bool leftAtSetpoint();
+    bool rightAtSetpoint();
     void resetGyro();
     int getGyro();
     void resetEncoders();

@@ -19,11 +19,14 @@ Base::Base() {
   rightMiddleBaseMotor->reverse();
   //rightRearBaseMotor->reverse();
 
-  // Set follower motors
+  // Set follower motorss
   leftFrontBaseMotor->addFollower(leftMiddleBaseMotor);
   leftFrontBaseMotor->addFollower(leftRearBaseMotor);
   rightFrontBaseMotor->addFollower(rightMiddleBaseMotor);
   rightFrontBaseMotor->addFollower(rightRearBaseMotor);
+
+  leftController = new PIDController(leftFrontBaseMotor, 0.5, 0.0, 0.0);
+  rightController = new PIDController(rightFrontBaseMotor, 0.5, 0.0, 0.0);
 
   gyro = gyroInit(gyroPort, 196);
   ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
@@ -88,6 +91,48 @@ bool Base::turnBaseTo(int target, int logValue, int threshold, int direction) {
   return inRange(gyroValue, gyroValue - threshold, gyroValue + threshold);
 }
 
+void Base::setLeftSetpoint(int setpoint) {
+  leftController->setSetpoint(setpoint);
+}
+
+void Base::setRightSetpoint(int setpoint) {
+  rightController->setSetpoint(setpoint);
+}
+
+void Base::lockLeft() {
+  leftController->setSetpoint(getLeftIME());
+}
+
+void Base::lockRight() {
+  rightController->setSetpoint(getRightIME());
+}
+
+void Base::loopLeft() {
+  leftController->sensorValue(getLeftIME());
+  leftController->loop();
+}
+
+void Base::loopRight() {
+  rightController->sensorValue(getRightIME());
+  rightController->loop();
+}
+
+int Base::getLeftSetpoint() {
+  return leftController->getSetpoint();
+}
+
+int Base::getRightSetpoint() {
+  return rightController->getSetpoint();
+}
+
+bool Base::leftAtSetpoint() {
+  return leftController->atSetpoint();
+}
+
+bool Base::rightAtSetpoint() {
+  return rightController->atSetpoint();
+}
+
 void Base::resetGyro() {
   gyroReset(gyro);
 }
@@ -110,7 +155,7 @@ int Base::getLeftIME() {
 int Base::getRightIME() {
   int count;
   imeGet(baseRightI2CAddress, &count);
-  return count;
+  return -count;
 }
 
 int Base::getUltrasonic() {

@@ -36,26 +36,31 @@ void autonomous() {
   /*arm->moveFourBar(127);
   delay(550);
   arm->moveFourBar(0);*/
-  arm->setFourBarSetpoint((int)(fourBarRotationTicks * 0.719));
-  base->setReference();
+  arm->setFourBarSetpoint((int)(fourBarRotationTicks * 1.4));
+  //base->setReference();
+  base->setLeftSetpoint(base->getLeftSetpoint() + 360);
+  base->setRightSetpoint(base->getRightSetpoint() + 360);
   while (!arm->fourBarAtSetpoint()) {
     arm->fourBarLoop();
-    //base->moveBaseTo(500);
-    printf("Four bar setpoint is %d and four bar position is %d\n", arm->getFourBarSetpoint(), arm->getFourBarPosition());
+    //base->moveBaseTo(360);
+    base->loopLeft();
+    base->loopRight();
+    //printf("Four bar setpoint is %d and four bar position is %d\n", arm->getFourBarSetpoint(), arm->getFourBarPosition());
+    printf("Base imes are %d and %d\n", base->getLeftIME(), base->getRightIME());
     delay(DELAY_TIME);
   }
 
-  /*while(!base->moveBaseTo(500)) {
+  while(!base->leftAtSetpoint() || !base->rightAtSetpoint()) {
     delay(DELAY_TIME);
   }
 
   int startTime = millis();
   while(millis() - startTime < 500) {
     arm->moveCollector(-KMaxMotorSpeed);
-  }*/
+  }
 
   // Get robot ready for teleop
-  mogo->moveMobileGoal(-127);
+  mogo->moveMobileGoal(127);
   delay(130);
   mogo->moveMobileGoal(0);
   mogo->resetIME();

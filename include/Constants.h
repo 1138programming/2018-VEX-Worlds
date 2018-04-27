@@ -52,7 +52,8 @@ const int KMaxJoystickValue = 127;
 const int encoderTicks = 360; // Encoder ticks in one revolution
 const int speedIMEMaxRotations = 392;
 const int fourBarRotationTicks = encoderTicks; // Accounts for the 5:1 gear ratio
-const int wristRotationTicks = 3 * speedIMEMaxRotations; // Wrist is on a 5 to 1 rotation
+const int wristRotationTicks = 3 * encoderTicks; // Wrist is on a 3 to 1 rotation
+const int moGoalRotationTicks = 7 * encoderTicks;
 const float rotationsPerInch = 31.400156410256; // TODO check if this is correct
 
 

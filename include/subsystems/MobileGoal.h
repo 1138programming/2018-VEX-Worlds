@@ -16,6 +16,7 @@ class MobileGoal {
     void loop();
     void setSetpoint(int setpoint);
     bool atSetpoint();
+    int getPosition();
     void lock();
     int getSetpoint();
     void resetIME();
