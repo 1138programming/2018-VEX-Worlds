@@ -9,7 +9,7 @@ bool getLimitSwitch(unsigned char pin) {
 	return digitalRead(pin) == LOW;
 }
 
-int range(int value, int min, int max) {
+int confineToRange(int value, int min, int max) {
 	if (value < min)
 		return min;
 	else if (value > max)
@@ -17,8 +17,12 @@ int range(int value, int min, int max) {
 	return value;
 }
 
-float fabs(float value) {
+bool inRange(int value, int min, int max) {
+	return min <= value && value <= max;
+}
+
+/*float fabs(float value) {
 	if(value < 0)
 		return -1 * value;
 	return value;
-}
+}*/

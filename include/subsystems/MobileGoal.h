@@ -7,6 +7,7 @@ class MobileGoal {
   private:
     int encoderTicks;
     PIDController* controller;
+    // PIDController* rightController;
     static MobileGoal* instance;
     Motor* mobileGoalMotor;
     MobileGoal();

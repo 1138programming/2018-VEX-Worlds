@@ -33,7 +33,7 @@ extern int imeCount;
 void operatorControl() {
 	//Define joystick input variables
 	int leftSide, rightSide, wristChannel, fourBarChannel; // Joysticks channel values
-	bool moGoalFwd, moGoalBck, stackCone, cllFwd, cllBck, slowMode; // Button states
+	bool moGoalFwd, moGoalBck, stackCone, cllFwd, cllBck, slowMode = false; // Button states
 	bool stackingCone = false;
 
 	//Create instances of subsystems
@@ -64,6 +64,40 @@ void operatorControl() {
 		//	printf("Four bar at setpoint \n");
 		delay(DELAY_TIME);
 	}*/
+	/*moGoal->moveMobileGoal(127);
+  delay(130);
+  moGoal->moveMobileGoal(0);
+  moGoal->resetIME();*/
+	arm->lockFourBar();
+
+	/*while(true) {
+		moGoalFwd = joystickGetDigital(1, 5, JOY_DOWN);
+		moGoalBck = joystickGetDigital(1, 5, JOY_UP);
+		if (moGoalFwd) {
+			//moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
+			printf("Mobile goal forward\n");
+			//moGoal->moveMobileGoal(KMaxMotorSpeed);
+			arm->moveFourBar(KMaxMotorSpeed);
+		} else if(moGoalBck) {
+			//moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
+			printf("Mobile goal backward\n");
+			//moGoal->moveMobileGoal(-KMaxMotorSpeed);
+			arm->moveFourBar(-KMaxMotorSpeed);
+		}
+	}*/
+
+	/*Motor* port2 = Motor::getMotor(2);
+	Motor* port3 = Motor::getMotor(3);
+	Motor* port4 = Motor::getMotor(4);
+
+	port2->addFollower(port3);
+	port2->addFollower(port4);
+
+	while (true) {
+		port2->setSpeed(127);
+		delay(DELAY_TIME);
+	}*/
+
 	while (true) {
 		// Set joysticks
 		leftSide = joystickGetAnalog(1, 3); // Left y-channel
@@ -74,13 +108,16 @@ void operatorControl() {
 		// Set buttons
 		moGoalFwd = joystickGetDigital(1, 6, JOY_DOWN);
 		moGoalBck = joystickGetDigital(1, 6, JOY_UP);
-		cllFwd = joystickGetDigital(2, 5, JOY_UP);
-		cllBck = joystickGetDigital(2, 5, JOY_DOWN);
-		stackCone = joystickGetDigital(2, 8, JOY_LEFT);
+		cllFwd = joystickGetDigital(2, 6, JOY_DOWN);
+		cllBck = joystickGetDigital(2, 6, JOY_UP);
+		/*stackCone = joystickGetDigital(2, 8, JOY_LEFT);
 		if (stackCone) {
 			// Don't do the action multiple times and leave us in an undefined state
-			while (joystickGetDigital(2, 8, JOY_LEFT));
-		}
+			while (joystickGetDigital(2, 8, JOY_LEFT)) {
+				delay(DELAY_TIME);
+			}
+		}*/
+		stackCone = false;
 		slowMode = joystickGetDigital(1, 5, JOY_UP);
 
 		// Set to slow mode
@@ -97,7 +134,7 @@ void operatorControl() {
 			// Move the wrist - New 4/23: Added code to check if IME is present or not. If it isn't fall back to non-PID code
 			deltaWrist = threshold(wristChannel, 10);
 			if (imeCount < 4) {
-				printf("Less that 4 imes? %d\n", imeCount);
+				//printf("Less that 4 imes? %d\n", imeCount);
 				arm->moveWrist(deltaWrist);
 			} else {
 				if (deltaWrist) {
@@ -124,11 +161,15 @@ void operatorControl() {
 
 		// Move mobile goal
 		if (moGoalFwd) {
-			moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
+			//moGoal->setSetpoint(moGoal->getIME() + KMaxMotorSpeed);
+			moGoal->moveMobileGoal(KMaxMotorSpeed);
 		} else if(moGoalBck) {
-			moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
+			//moGoal->setSetpoint(moGoal->getIME() - KMaxMotorSpeed);
+			moGoal->moveMobileGoal(-KMaxMotorSpeed);
+		} else {
+			moGoal->moveMobileGoal(0);
 		}
-		moGoal->loop();
+		//moGoal->loop();
 		//printf("Mogo IME: %d\n", moGoal->getIME()); // IME goes from 0-1750 at max +/- 20
 
 		// Start collector

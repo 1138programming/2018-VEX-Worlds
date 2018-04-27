@@ -7,8 +7,10 @@ int threshold(int aNumber, int threshold = 20);
 
 bool getLimitSwitch(unsigned char pin);
 
-int range(int value, int min = -KMaxMotorSpeed, int max = KMaxMotorSpeed);
+int confineToRange(int value, int min = -KMaxMotorSpeed, int max = KMaxMotorSpeed);
 
-float fabs(float value);
+bool inRange(int value, int min = -KMaxMotorSpeed, int max = KMaxMotorSpeed);
+
+//float fabs(float value);
 
 #endif

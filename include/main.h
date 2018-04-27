@@ -28,6 +28,7 @@
 #include <API.h>
 #include <Constants.h>
 #include <common.h>
+#include <math.h>
 #include <abstractBaseClasses/Motor.h>
 #include <abstractBaseClasses/PIDController.h>
 #include <abstractBaseClasses/ShaftEncoder.h>

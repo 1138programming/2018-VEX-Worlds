@@ -8,6 +8,7 @@ class FourBar {
     static FourBar* instance;
     Encoder fourBarEncoder;
     PIDController* controller;
+    // PIDController* topController;
     Motor* fourBarMotor;
     FourBar();
   public:

@@ -11,10 +11,12 @@ class PIDController {
     Motor* outputMotor;
     long integral = 0;
     float derivative = 0;
+    int error = 0;
     int previousError = 0;
+    int output = 0;
     int setpoint = 0;
     int currSensorValue = 0;
-    int threshold = 10; // Default value
+    int threshold = 15; // Default value
     float deltaTime = 0;
     int lastTime = 0;
   public:

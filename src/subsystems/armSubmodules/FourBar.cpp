@@ -4,48 +4,52 @@ FourBar* FourBar::instance = 0;
 
 FourBar::FourBar() {
   fourBarMotor = Motor::getMotor(fourBarPort);
+
   fourBarEncoder = encoderInit(fourBarEncoderTopPort, fourBarEncoderBottomPort, true);
   resetEncoder();
-  //controller = new PIDController(fourBarMotor, 0.5, 0.0, 0.0);
+
+  controller = new PIDController(fourBarMotor, 0.7, 0.0, 0.0);
+  //topController = new PIDController(bottomFourBarMotor, 0.7, 0.0, 0.0);
 }
 
 void FourBar::move(int speed) {
-  //speed = threshold(speed);
-  //fourBarMotor->setSpeed(speed);
+  //topFourBarMotor->setSpeed(speed);
+  fourBarMotor->setSpeed(speed);
 }
 
 void FourBar::setSetpoint(int setpoint) {
-  //controller->setSetpoint(setpoint);
+  controller->setSetpoint(setpoint);
+  //topController->setSetpoint(setpoint);
 }
 
 void FourBar::lock() {
   //printf("%d\n", getEncoderValue());
-  //controller->setSetpoint(getEncoderValue());
+  controller->setSetpoint(getEncoderValue());
+  //topController->setSetpoint(getEncoderValue());
 }
 
 int FourBar::getSetpoint() {
-  //return controller->getSetpoint();
-  return 0;
+  return controller->getSetpoint();
 }
 
 void FourBar::loop() {
-  //controller->sensorValue(getEncoderValue());
-  //controller->loop();
+  controller->sensorValue(getEncoderValue());
+  controller->loop();
+  //topController->sensorValue(getEncoderValue());
+  //topController->loop();
 }
 
 bool FourBar::atSetpoint() {
-  //return controller->atSetpoint();
-  return true;
+  return controller->atSetpoint();
 }
 
 int FourBar::getEncoderValue() {
   //printf("Four bar encoder is %d\n", encoderGet(fourBarEncoder));
-  //return encoderGet(fourBarEncoder);
-  return 0;
+  return encoderGet(fourBarEncoder);
 }
 
 void FourBar::resetEncoder() {
-  //encoderReset(fourBarEncoder);
+  encoderReset(fourBarEncoder);
 }
 
 FourBar* FourBar::getInstance() {

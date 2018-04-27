@@ -17,10 +17,18 @@ Base::Base() {
   leftRearBaseMotor->reverse();
   rightFrontBaseMotor->reverse();
   rightMiddleBaseMotor->reverse();
-  rightRearBaseMotor->reverse();
+  //rightRearBaseMotor->reverse();
+
+  // Set follower motors
+  leftFrontBaseMotor->addFollower(leftMiddleBaseMotor);
+  leftFrontBaseMotor->addFollower(leftRearBaseMotor);
+  rightFrontBaseMotor->addFollower(rightMiddleBaseMotor);
+  rightFrontBaseMotor->addFollower(rightRearBaseMotor);
 
   gyro = gyroInit(gyroPort, 196);
   ultrasonic = ultrasonicInit(ultrasonicEcho, ultrasonicPing);
+
+  encoderReference = 0;
 }
 
 /**
@@ -34,19 +42,50 @@ void Base::moveBase(int left, int right) {
 
   //Left motors
   leftFrontBaseMotor->setSpeed(left);
-  leftMiddleBaseMotor->setSpeed(left);
-  leftRearBaseMotor->setSpeed(left);
-  //motorSet(leftFrontBase, left);
-  //motorSet(leftMiddleBase, left);
-  //motorSet(leftRearBase, left);
+  //leftMiddleBaseMotor->setSpeed(left);
+  //leftRearBaseMotor->setSpeed(left);
 
   //Right motors
   rightFrontBaseMotor->setSpeed(right);
-  rightMiddleBaseMotor->setSpeed(right);
-  rightRearBaseMotor->setSpeed(right);
-  //motorSet(rightFrontBase, right);
-  //motorSet(rightMiddleBase, right);
-  //motorSet(rightRearBase, right);
+  //rightMiddleBaseMotor->setSpeed(right);
+  //rightRearBaseMotor->setSpeed(right);
+}
+
+bool Base::moveBaseTo(int target, int logValue, int threshold) {
+  setReference();
+
+  // Set speed. Speed should decrease as the base gets closer to the target value
+  int averageEncoderValue = (int)((getRightIME() + getLeftIME()) / 2);
+  int speed = (int)(floor((KMaxMotorSpeed * log(abs((encoderReference + target) - averageEncoderValue) + 1)) / log(logValue + 1)));
+  speed *= (encoderReference + target) > averageEncoderValue ? 1 : -1;
+
+  // Move base by speed
+  moveBase(speed, speed);
+
+  return inRange(target, target - threshold, target + threshold);
+}
+
+bool Base::turnBaseTo(int target, int logValue, int threshold, int direction) {
+  int gyroValue = getGyro();
+  gyroValue = (int)(gyroValue - (floor(gyroValue / 360) * 360));
+
+  int rightAngle = target > gyroValue ? target - gyroValue : (360 - gyroValue) + target;
+  int leftAngle = target > gyroValue ? (360 - gyroValue) + target : gyroValue - target;
+
+  int speed = (int)(floor((KMaxMotorSpeed * log(abs(target - gyroValue) + 1)) / log(logValue + 1)));
+
+  if (abs(direction) != 1) {
+    if (rightAngle < leftAngle)
+      moveBase(speed, -speed);
+    else
+      moveBase(-speed, speed);
+  } else if (direction == 1) {
+    moveBase(speed, -speed);
+  } else if (direction == -1) {
+    moveBase(-speed, speed);
+  }
+
+  return inRange(gyroValue, gyroValue - threshold, gyroValue + threshold);
 }
 
 void Base::resetGyro() {
@@ -80,6 +119,10 @@ int Base::getUltrasonic() {
 
 void Base::setMultiplier(float multiplier) {
   this->multiplier = multiplier;
+}
+
+void Base::setReference() {
+  encoderReference = (int)((getRightIME() + getLeftIME()) / 2);
 }
 
 Base* Base::getInstance() {

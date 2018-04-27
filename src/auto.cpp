@@ -27,13 +27,36 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
+  // Get instacnes of subsystems
   Arm* arm = Arm::getInstance();
   MobileGoal* mogo = MobileGoal::getInstance();
-  arm->moveFourBar(127);
-  delay(850);
-  arm->moveFourBar(0);
+  Base* base = Base::getInstance();
+
+  // Auton
+  /*arm->moveFourBar(127);
+  delay(550);
+  arm->moveFourBar(0);*/
+  arm->setFourBarSetpoint((int)(fourBarRotationTicks * 0.719));
+  base->setReference();
+  while (!arm->fourBarAtSetpoint()) {
+    arm->fourBarLoop();
+    //base->moveBaseTo(500);
+    printf("Four bar setpoint is %d and four bar position is %d\n", arm->getFourBarSetpoint(), arm->getFourBarPosition());
+    delay(DELAY_TIME);
+  }
+
+  /*while(!base->moveBaseTo(500)) {
+    delay(DELAY_TIME);
+  }
+
+  int startTime = millis();
+  while(millis() - startTime < 500) {
+    arm->moveCollector(-KMaxMotorSpeed);
+  }*/
+
+  // Get robot ready for teleop
   mogo->moveMobileGoal(-127);
-  delay(150);
+  delay(130);
   mogo->moveMobileGoal(0);
   mogo->resetIME();
   arm->lockFourBar();

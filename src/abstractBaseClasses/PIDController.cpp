@@ -41,18 +41,16 @@ void PIDController::setThreshold(int threshold) {
 void PIDController::loop() {
   deltaTime = millis() - lastTime;
   lastTime = millis();
-  int error, output;
   error = setpoint - currSensorValue;
   integral += error * (deltaTime / 1000);
   derivative  = (error - previousError) / (deltaTime / 1000);
-  output = range(kP * error + kI * integral + kD * derivative);
+  output = confineToRange(kP * error + kI * integral + kD * derivative);
+  //printf("Error is %d and output is %d\n", error, output);
   outputMotor->setSpeed(output);
   previousError = error;
 }
 
 bool PIDController::atSetpoint() {
-  if (range(currSensorValue, setpoint - threshold, setpoint + threshold) && fabs(derivative) < 0.1) {
-      return true;
-  }
-  return false;
+  bool atSetpoint = inRange(this->currSensorValue, setpoint - threshold, setpoint + threshold) && fabs(derivative) < 0.1;
+  return atSetpoint;
 }

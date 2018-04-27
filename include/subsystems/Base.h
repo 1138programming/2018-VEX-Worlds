@@ -21,9 +21,13 @@ class Base {
 
     float multiplier;
 
+    int encoderReference;
+
     Base();
   public:
     void moveBase(int left, int right);
+    bool moveBaseTo(int target, int logValue = 750, int threshold = 10);
+    bool turnBaseTo(int target, int logValue = 180, int threshold = 10, int direction = 0);
     void resetGyro();
     int getGyro();
     void resetEncoders();
@@ -31,6 +35,7 @@ class Base {
     int getRightIME();
     int getUltrasonic();
     void setMultiplier(float multiplier);
+    void setReference();
     static Base* getInstance();
 };
 

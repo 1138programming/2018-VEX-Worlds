@@ -24,7 +24,7 @@ int imeCount;
 void initializeIO() {
   printf("Initializing IO...");
   pinMode(fourBarLimitSwitch, INPUT);
-  printf("Done!\n");
+  printf(" Done!\n");
 }
 
 /*
@@ -43,7 +43,7 @@ void initializeIO() {
 void initialize() {
   imeCount = imeInitializeAll();
   printf("%d IMEs Initialized.\n", imeCount);
-  setTeamName("1138");
+  setTeamName("1138B");
 
   Motor::init();
 }
